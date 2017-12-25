@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	_ "fmt"
 	"github.com/astaxie/beego"
-	// "strconv"
+	"github.com/midoks/webcron/app/models"
+	_ "strconv"
 	"strings"
 )
 
@@ -37,6 +39,10 @@ func (this *BaseController) Prepare() {
 	this.Data["loginUserId"] = this.userId
 	this.Data["loginUserName"] = this.userName
 
+	//菜单导航
+	menuNav := models.FuncGetNav()
+	this.Data["menuNav"] = menuNav
+
 }
 
 //渲染模版
@@ -52,4 +58,9 @@ func (this *BaseController) display(tpl ...string) {
 
 	this.Layout = "layout/index.html"
 	this.TplName = tplname
+}
+
+// 是否POST提交
+func (this *BaseController) isPost() bool {
+	return this.Ctx.Request.Method == "POST"
 }
