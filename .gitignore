@@ -3,6 +3,8 @@
 *.dll
 *.so
 *.dylib
+webcron
+cpu-3160.pprof
 
 # Test binary, build with `go test -c`
 *.test

@@ -36,6 +36,7 @@ func (this *BaseController) Prepare() {
 	this.Data["curAction"] = this.actionName
 	this.Data["loginUserId"] = this.userId
 	this.Data["loginUserName"] = this.userName
+
 }
 
 //渲染模版

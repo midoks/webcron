@@ -1,12 +1,13 @@
 package test
 
 import (
-	_ "github.com/midoks/webcron/routers"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 	"runtime"
 	"testing"
+
+	_ "github.com/midoks/webcron/routers"
 
 	"github.com/astaxie/beego"
 	. "github.com/smartystreets/goconvey/convey"
