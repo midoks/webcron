@@ -3,6 +3,7 @@ package controllers
 import (
 	_ "fmt"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"github.com/midoks/webcron/app/models"
 	_ "strconv"
 	"strings"
@@ -23,13 +24,19 @@ type BaseController struct {
 	pageSize int
 }
 
+func (this *BaseController) log(args ...string) {
+	log := logs.GetLogger()
+	log.Println(args)
+}
+
 func (this *BaseController) Prepare() {
+
 	this.pageSize = 20
 	controllerName, actionName := this.GetControllerAndAction()
 	this.controllerName = strings.ToLower(controllerName[0 : len(controllerName)-10])
 	this.actionName = strings.ToLower(actionName)
 
-	println(this.controllerName, this.actionName)
+	//println(this.controllerName, this.actionName)
 
 	this.Data["version"] = beego.AppConfig.String("version")
 	this.Data["siteName"] = beego.AppConfig.String("site.name")

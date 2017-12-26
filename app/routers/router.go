@@ -11,6 +11,9 @@ func init() {
 	models.Init()
 
 	beego.Router("/", &controllers.IndexController{}, "*:Index")
-	beego.AutoRouter(&controllers.IndexController{})
 	beego.AutoRouter(&controllers.LoginController{})
+	beego.AutoRouter(&controllers.IndexController{})
+	beego.AutoRouter(&controllers.SysUserController{})
+	beego.AutoRouter(&controllers.SysLogController{})
+
 }

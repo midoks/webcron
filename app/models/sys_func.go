@@ -22,8 +22,8 @@ type SysFunc struct {
 }
 
 type SysFuncNav struct {
-	info SysFunc
-	list []SysFunc
+	Info SysFunc
+	List []SysFunc
 }
 
 func (u *SysFunc) TableName() string {
@@ -44,14 +44,15 @@ func FuncGetNav() []SysFuncNav {
 
 	res, _ := o.Raw("select * from sys_func where pid=? and status=? order by sort asc", 0, 1).QueryRows(&list)
 	nav := make([]SysFuncNav, len(list))
+
 	if res > 0 {
 
 		for i := 0; i < len(list); i++ {
 			var cList []SysFunc
 			cres, _ := o.Raw("select * from sys_func where pid=? and status=? order by sort asc", list[i].Id, 1).QueryRows(&cList)
 			if cres > 0 {
-				nav[i].info = list[i]
-				nav[i].list = cList
+				nav[i].Info = list[i]
+				nav[i].List = cList
 			}
 		}
 	}

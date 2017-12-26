@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="function-table"
+                   class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th class="col-sm-1">序号</th>
+                    <th class="col-sm-1">用户名</th>
+                    <th class="col-sm-1">昵称</th>
+                    <th class="col-sm-1">性别</th>
+                    <th class="col-sm-1">邮箱</th>
+                    <th class="col-sm-1">手机号</th>
+                    <th class="col-sm-1">角色</th>
+                    <th style="width: 80px;">状态</th>
+                    <th><a class="blue" title="新增管理员"
+                           href="/{{.curController}}/add"> <i
+                            class="glyphicon glyphicon-plus bigger-130"></i>
+                    </a></th>
+                </tr>
+                </thead>
+
+
+                <tbody>
+                    {{range  $k, $v := .list}}
+                    <tr>
+                        <td>{{$v.id}}</td>
+                        <td>{{$v.user_name}}</td>
+                        <td>{{$v.nick}}</td>
+                        <td>{{$v.sex}}</td>
+                        <td>{{$v.mail}}</td>
+                        <td>{{$v.tel}}</td>
+                        <td>{{$v.roleid}}</td>
+                        <td>{{$v.status}}</td>
+                        <td></td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="dataTables_paginate paging_bootstrap"></div>
+    </div>
+</div>
+
+<script>
+jQuery(function($) {
+});
+</script>

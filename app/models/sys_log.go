@@ -4,37 +4,31 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-type SysUser struct {
-	Id         int
-	Username   string
-	Nick       string
-	Sex        int
-	Password   string
-	Mail       string
-	Tel        string
-	Roleid     int
-	Status     int
-	UpdateTime int64
-	CreateTime int64
+type SysLog struct {
+	Id      int
+	Uid     int
+	Type    int
+	Msg     string
+	AddTime int64
 }
 
-func (u *SysUser) TableName() string {
-	return "sys_user"
+func (u *SysLog) TableName() string {
+	return "sys_logs"
 }
 
-func (u *SysUser) Update(fields ...string) error {
+func (u *SysLog) Update(fields ...string) error {
 	if _, err := orm.NewOrm().Update(u, fields...); err != nil {
 		return err
 	}
 	return nil
 }
 
-func UserGetList(page, pageSize int, filters ...interface{}) ([]*SysUser, int64) {
+func LogGetList(page, pageSize int, filters ...interface{}) ([]*SysLog, int64) {
 	offset := (page - 1) * pageSize
 
-	list := make([]*SysUser, 0)
+	list := make([]*SysLog, 0)
 
-	query := orm.NewOrm().QueryTable("sys_user")
+	query := orm.NewOrm().QueryTable("sys_logs")
 
 	if len(filters) > 0 {
 		l := len(filters)

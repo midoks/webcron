@@ -47,8 +47,8 @@ CREATE TABLE `sys_func` (
   `desc` varchar(200) DEFAULT NULL COMMENT '介绍',
   `sort` int(10) NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态：0无效1有效-1软删除',
-  `create_time` int(10),
   `update_time` int(10),
+  `create_time` int(10),
   PRIMARY KEY (`id`),
   KEY `pid` (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COMMENT='权限列表';
@@ -136,13 +136,13 @@ CREATE TABLE `sys_user` (
   `tel` varchar(11) DEFAULT NULL COMMENT '手机号',
   `roleid` int(11) DEFAULT '0' COMMENT '所属角色',
   `status` tinyint(4) DEFAULT '1' COMMENT '状体1有效0无效',
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_time` int(10),
+  `update_time` int(10),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='管理员';
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('3', 'admin', '21232f297a57a5a743894a0e4a801fc3', '管理员', '1', 'admin@localhost', '13000000000', '1', '1', '2017-03-18 09:22:25', '2017-11-06 14:07:39');
-INSERT INTO `sys_user` VALUES ('4', 'guest', '084e0343a0486ff05530df6c705c8bb4', 'guest', '1', '13800138000@qq.com', '13800138000', '3', '1', '2017-11-04 23:14:56', '2017-11-04 23:14:56');
+INSERT INTO `sys_user` VALUES ('3', 'admin', '21232f297a57a5a743894a0e4a801fc3', '管理员', '1', 'admin@localhost', '13000000000', '1', '1', '1489429439', '1489429439');
+INSERT INTO `sys_user` VALUES ('4', 'guest', '084e0343a0486ff05530df6c705c8bb4', 'guest', '1', '13800138000@qq.com', '13800138000', '3', '1', '1489429439', '1489429439');

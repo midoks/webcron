@@ -23,7 +23,7 @@ func Init() {
 	}
 	orm.RegisterDataBase("default", "mysql", dsn)
 
-	orm.RegisterModel(new(SysUser), new(SysFunc))
+	orm.RegisterModel(new(SysUser), new(SysFunc), new(SysLog))
 
 	if beego.AppConfig.String("runmode") == "dev" {
 		orm.Debug = true
