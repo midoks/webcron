@@ -4,6 +4,7 @@ import (
 	_ "fmt"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
+	"strings"
 )
 
 type SysFunc struct {
@@ -22,8 +23,10 @@ type SysFunc struct {
 }
 
 type SysFuncNav struct {
-	Info SysFunc
-	List []SysFunc
+	Info      SysFunc
+	List      []SysFunc
+	MenuOpen  bool
+	ListCount int
 }
 
 func (u *SysFunc) TableName() string {
@@ -37,7 +40,42 @@ func (u *SysFunc) Update(fields ...string) error {
 	return nil
 }
 
-func FuncGetNav() []SysFuncNav {
+func FuncGetNav(curController string, curAction string) (navNow []SysFuncNav, menuNameNow string, funcNameNow string) {
+
+	o := orm.NewOrm()
+	var list []SysFunc
+
+	res, _ := o.Raw("select * from sys_func where pid=? and status=? order by sort asc", 0, 1).QueryRows(&list)
+	nav := make([]SysFuncNav, len(list))
+	var curMenuName string = ""
+	var curMenuFuncName string = ""
+
+	if res > 0 {
+		for i := 0; i < len(list); i++ {
+			var cList []SysFunc
+			cres, _ := o.Raw("select * from sys_func where pid=? and status=? order by sort asc", list[i].Id, 1).QueryRows(&cList)
+			if cres > 0 {
+				nav[i].Info = list[i]
+				nav[i].List = cList
+				nav[i].ListCount = len(cList)
+				nav[i].MenuOpen = false
+
+				for ci := 0; ci < len(cList); ci++ {
+					if strings.EqualFold(cList[ci].Controller, curController) && strings.EqualFold(cList[ci].Action, curAction) {
+						nav[i].MenuOpen = true
+						// fmt.Println("debug:", cList[ci].Controller, curController, cList[ci].Action, curAction)
+						curMenuName = list[i].Name
+						curMenuFuncName = cList[ci].Name
+					}
+				}
+			}
+		}
+	}
+
+	return nav, curMenuName, curMenuFuncName
+}
+
+func FuncGetList() []SysFuncNav {
 
 	o := orm.NewOrm()
 	var list []SysFunc
@@ -46,13 +84,13 @@ func FuncGetNav() []SysFuncNav {
 	nav := make([]SysFuncNav, len(list))
 
 	if res > 0 {
-
 		for i := 0; i < len(list); i++ {
 			var cList []SysFunc
 			cres, _ := o.Raw("select * from sys_func where pid=? and status=? order by sort asc", list[i].Id, 1).QueryRows(&cList)
 			if cres > 0 {
 				nav[i].Info = list[i]
 				nav[i].List = cList
+				nav[i].ListCount = len(cList)
 			}
 		}
 	}

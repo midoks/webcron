@@ -97,8 +97,6 @@ CREATE TABLE `sys_logs` (
 -- Records of sys_logs
 -- ----------------------------
 INSERT INTO `sys_logs` VALUES ('1', '1', '1', '1', '1510207207');
-INSERT INTO `sys_logs` VALUES ('2', '3', '1', '登录成功', '1510208513');
-INSERT INTO `sys_logs` VALUES ('3', '3', '1', '登录成功', '1511332681');
 INSERT INTO `sys_logs` VALUES ('4', '3', '1', '登录成功', '1511759612');
 
 -- ----------------------------
@@ -111,16 +109,16 @@ CREATE TABLE `sys_role` (
   `desc` varchar(200) DEFAULT NULL COMMENT '角色介绍',
   `list` text NOT NULL COMMENT '权限列表JSON',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态1有效0无效',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` int(10),
+  `create_time` int(10),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='管理员权限表';
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES ('1', '系统管理员', '系统总管理员', '2,7,9,11,12,30,3,5,6,13,19,14,15,17,18,37,23,32,34', '1', '2017-03-15 15:39:20', '2017-11-09 13:49:30');
-INSERT INTO `sys_role` VALUES ('3', '编辑', '普通编辑人员', '2,14,15,17,18,23,32', '1', '2017-11-03 17:35:17', '2017-11-08 18:51:20');
+INSERT INTO `sys_role` VALUES ('1', '系统管理员', '系统总管理员', '2,7,9,11,12,30,3,5,6,13,19,14,15,17,18,37,23,32,34', '1', '1489429439', '1489429439');
+INSERT INTO `sys_role` VALUES ('3', '编辑', '普通编辑人员', '2,14,15,17,18,23,32', '1', '1489429439', '1489429439');
 
 -- ----------------------------
 -- Table structure for `sys_user`
@@ -136,8 +134,8 @@ CREATE TABLE `sys_user` (
   `tel` varchar(11) DEFAULT NULL COMMENT '手机号',
   `roleid` int(11) DEFAULT '0' COMMENT '所属角色',
   `status` tinyint(4) DEFAULT '1' COMMENT '状体1有效0无效',
-  `create_time` int(10),
   `update_time` int(10),
+  `create_time` int(10),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='管理员';
 

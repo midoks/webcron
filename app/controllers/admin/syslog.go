@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/astaxie/beego"
-	"github.com/midoks/webcron/app/lib"
+	"github.com/midoks/webcron/app/libs"
 	"github.com/midoks/webcron/app/models"
 	_ "runtime"
 	_ "strconv"
@@ -56,6 +56,7 @@ func (this *SysLogController) Index() {
 	this.Data["search_type"] = searchType
 	this.Data["search_word"] = searchWord
 	this.Data["list"] = list
-	this.Data["pageLink"] = libs.NewPager(page, int(count), this.pageSize, beego.URLFor("SysLogController.Index"), true).ToString()
+	this.Data["pageLink"] = libs.NewPager(page, int(count), this.pageSize,
+		beego.URLFor("SysLogController.Index", "search_type", searchType, "search_word", searchWord), true).ToString()
 	this.display()
 }

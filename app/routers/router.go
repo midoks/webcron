@@ -14,6 +14,8 @@ func init() {
 	beego.AutoRouter(&controllers.LoginController{})
 	beego.AutoRouter(&controllers.IndexController{})
 	beego.AutoRouter(&controllers.SysUserController{})
+	beego.AutoRouter(&controllers.SysFuncController{})
+	beego.AutoRouter(&controllers.SysRoleController{})
 	beego.AutoRouter(&controllers.SysLogController{})
 
 }

@@ -1,9 +1,9 @@
 <div class="page-header">
     <h1>
-       控制台
+       {{if eq "" .curMenuName}}控制台{{else}}{{.curMenuName}}{{end}}
         <small>
             <i class="ace-icon fa fa-angle-double-right"></i>
-       		首页
+       		{{if eq "" .curMenuFuncName}}首页{{else}}{{.curMenuFuncName}}{{end}}
         </small>
     </h1>
 </div>

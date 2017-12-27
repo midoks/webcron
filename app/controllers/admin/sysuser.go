@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/astaxie/beego"
-	"github.com/midoks/webcron/app/lib"
+	"github.com/midoks/webcron/app/libs"
 	"github.com/midoks/webcron/app/models"
 	"strings"
 	"time"
@@ -41,7 +41,7 @@ func (this *SysUserController) Index() {
 		row := make(map[string]interface{})
 
 		row["id"] = v.Id
-		row["user_name"] = v.Username
+		row["username"] = v.Username
 		row["nick"] = v.Nick
 		row["sex"] = v.Sex
 		row["mail"] = v.Mail
@@ -57,6 +57,19 @@ func (this *SysUserController) Index() {
 	this.Data["search_type"] = searchType
 	this.Data["search_word"] = searchWord
 	this.Data["list"] = list
-	this.Data["pageLink"] = libs.NewPager(page, int(count), this.pageSize, beego.URLFor("SysLogController.Index"), true).ToString()
+	this.Data["pageLink"] = libs.NewPager(page, int(count), this.pageSize, beego.URLFor("SysUserController.Index"), true).ToString()
+	this.display()
+}
+
+func (this *SysUserController) Add() {
+
+	id, err := this.GetInt("id")
+	//if err == nil {
+	data, _ := models.UserGetById(id)
+	this.Data["data"] = data
+	//}
+
+	fmt.Println("--test--", err)
+
 	this.display()
 }

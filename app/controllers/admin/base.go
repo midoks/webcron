@@ -43,12 +43,12 @@ func (this *BaseController) Prepare() {
 	this.Data["curRoute"] = this.controllerName + "." + this.actionName
 	this.Data["curController"] = this.controllerName
 	this.Data["curAction"] = this.actionName
-	this.Data["loginUserId"] = this.userId
-	this.Data["loginUserName"] = this.userName
 
 	//菜单导航
-	menuNav := models.FuncGetNav()
+	menuNav, curMenuName, curMenuFuncName := models.FuncGetNav(this.controllerName, this.actionName)
 	this.Data["menuNav"] = menuNav
+	this.Data["curMenuName"] = curMenuName
+	this.Data["curMenuFuncName"] = curMenuFuncName
 
 }
 

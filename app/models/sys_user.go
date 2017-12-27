@@ -49,3 +49,21 @@ func UserGetList(page, pageSize int, filters ...interface{}) ([]*SysUser, int64)
 
 	return list, total
 }
+
+func UserGetById(id int) (SysUser, error) {
+
+	o := orm.NewOrm()
+	user := SysUser{Id: id}
+
+	err := o.Read(&user)
+
+	if err == orm.ErrNoRows {
+		return user, orm.ErrNoRows
+	} else if err == orm.ErrMissPK {
+		return user, orm.ErrMissPK
+	} else {
+		//fmt.Println(user.Id, user.Name)
+	}
+
+	return user, nil
+}

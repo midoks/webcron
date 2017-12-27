@@ -8,7 +8,7 @@
 </li>
 
 {{range $k,$v := .menuNav}}
-	<li class="">
+	<li class="{{if .MenuOpen}}open{{end}}">
         <a href="#" class="dropdown-toggle">
             <i class="menu-icon {{.Info.Icon}}"></i>
             <span class="menu-text">{{.Info.Name}}</span>
