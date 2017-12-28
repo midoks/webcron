@@ -1,73 +1,16 @@
 package controllers
 
-import (
-	_ "fmt"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-	"github.com/midoks/webcron/app/models"
-	_ "strconv"
-	"strings"
-)
-
-const (
-	MSG_OK  = 0
-	MSG_ERR = -1
-)
+import ()
 
 type BaseController struct {
-	beego.Controller
-	controllerName string
-	actionName     string
-	//user           *models.User
-	userId   int
-	userName string
-	pageSize int
-}
-
-func (this *BaseController) log(args ...string) {
-	log := logs.GetLogger()
-	log.Println(args)
+	CommonController
 }
 
 func (this *BaseController) Prepare() {
 
-	this.pageSize = 20
-	controllerName, actionName := this.GetControllerAndAction()
-	this.controllerName = strings.ToLower(controllerName[0 : len(controllerName)-10])
-	this.actionName = strings.ToLower(actionName)
+	this.initData()
 
-	//println(this.controllerName, this.actionName)
+	this.auth()
 
-	this.Data["version"] = beego.AppConfig.String("version")
-	this.Data["siteName"] = beego.AppConfig.String("site.name")
-	this.Data["curRoute"] = this.controllerName + "." + this.actionName
-	this.Data["curController"] = this.controllerName
-	this.Data["curAction"] = this.actionName
-
-	//菜单导航
-	menuNav, curMenuName, curMenuFuncName := models.FuncGetNav(this.controllerName, this.actionName)
-	this.Data["menuNav"] = menuNav
-	this.Data["curMenuName"] = curMenuName
-	this.Data["curMenuFuncName"] = curMenuFuncName
-
-}
-
-//渲染模版
-func (this *BaseController) display(tpl ...string) {
-	var tplname string
-	if len(tpl) > 0 {
-		tplname = tpl[0] + ".html"
-	} else {
-		tplname = this.controllerName + "/" + this.actionName + ".html"
-	}
-
-	print(tplname)
-
-	this.Layout = "layout/index.html"
-	this.TplName = tplname
-}
-
-// 是否POST提交
-func (this *BaseController) isPost() bool {
-	return this.Ctx.Request.Method == "POST"
+	this.initMenuData()
 }

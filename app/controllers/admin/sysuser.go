@@ -61,15 +61,31 @@ func (this *SysUserController) Index() {
 	this.display()
 }
 
+func (this *SysUserController) Repwd() {
+
+	this.display()
+}
+
 func (this *SysUserController) Add() {
 
-	id, err := this.GetInt("id")
-	//if err == nil {
-	data, _ := models.UserGetById(id)
-	this.Data["data"] = data
-	//}
+	if this.isPost() {
+		// fmt.Println(this.Ctx.Input.RequestBody)
+		// fmt.Printf("%s", this.Ctx.Input.RequestBody)
+		vars := make(map[string]string)
+		this.Ctx.Input.Bind(&vars, "vars")
+		fmt.Println(vars)
 
-	fmt.Println("--test--", err)
+	}
+
+	data := new(models.SysUser)
+	id, err := this.GetInt("id")
+	if err == nil {
+		data, _ = models.UserGetById(id)
+	}
+	this.Data["data"] = data
+
+	roleList, _ := models.RoleGetAll()
+	this.Data["roleList"] = roleList
 
 	this.display()
 }

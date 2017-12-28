@@ -1,7 +1,9 @@
 package models
 
 import (
+	"fmt"
 	"github.com/astaxie/beego/orm"
+	"time"
 )
 
 type SysLog struct {
@@ -42,4 +44,19 @@ func LogGetList(page, pageSize int, filters ...interface{}) ([]*SysLog, int64) {
 	query.OrderBy("-id").Limit(pageSize, offset).All(&list)
 
 	return list, total
+}
+
+func LogAdd(uid int, utype int, msg string) {
+	o := orm.NewOrm()
+	var log SysLog
+
+	log.Uid = uid
+	log.Type = utype
+	log.Msg = msg
+	log.AddTime = time.Now().Unix()
+
+	id, err := o.Insert(&log)
+	if err == nil {
+		fmt.Println("SysLog.LogAdd:", id)
+	}
 }

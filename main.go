@@ -12,7 +12,4 @@ func main() {
 
 	beego.Run()
 
-	// beego.EnableXSRF = true
-	// beego.XSRFKEY = "61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o"
-	// beego.XSRFExpire = 3600 //过期时间，默认1小时
 }

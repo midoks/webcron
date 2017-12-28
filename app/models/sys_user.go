@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -50,20 +51,29 @@ func UserGetList(page, pageSize int, filters ...interface{}) ([]*SysUser, int64)
 	return list, total
 }
 
-func UserGetById(id int) (SysUser, error) {
+func UserGetById(id int) (*SysUser, error) {
 
-	o := orm.NewOrm()
-	user := SysUser{Id: id}
-
-	err := o.Read(&user)
-
-	if err == orm.ErrNoRows {
-		return user, orm.ErrNoRows
-	} else if err == orm.ErrMissPK {
-		return user, orm.ErrMissPK
-	} else {
-		//fmt.Println(user.Id, user.Name)
+	u := new(SysUser)
+	err := orm.NewOrm().QueryTable("sys_user").Filter("id", id).One(u)
+	if err != nil {
+		return nil, err
 	}
+	return u, nil
+}
 
-	return user, nil
+func UserGetByName(username string) (*SysUser, error) {
+
+	u := new(SysUser)
+	err := orm.NewOrm().QueryTable("sys_user").Filter("username", username).One(u)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
+func UserAdd(obj SysUser) (int64, error) {
+	if obj.Username == "" {
+		return 0, fmt.Errorf("组名不能为空")
+	}
+	return orm.NewOrm().Insert(obj)
 }

@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	// "github.com/astaxie/beego"
+	"github.com/astaxie/beego"
 	// "github.com/midoks/webcron/app/lib"
 	"github.com/midoks/webcron/app/models"
 	// "strings"
@@ -23,11 +23,10 @@ func (this *SysRoleController) Index() {
 }
 
 func (this *SysRoleController) Add() {
-	this.display()
 
 	if this.isPost() {
 		fmt.Println("--post--")
-
+		this.redirect(beego.URLFor(".SysRoleController.Index"))
 	}
 
 	id, err := this.GetInt("id")
@@ -42,5 +41,6 @@ func (this *SysRoleController) Add() {
 	funcList := models.FuncGetList()
 
 	this.Data["funcList"] = funcList
+	this.display()
 
 }
