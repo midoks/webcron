@@ -1,8 +1,9 @@
 package models
 
 import (
-	"fmt"
+	_ "fmt"
 	"github.com/astaxie/beego/orm"
+	"time"
 )
 
 type SysUser struct {
@@ -24,6 +25,7 @@ func (u *SysUser) TableName() string {
 }
 
 func (u *SysUser) Update(fields ...string) error {
+	u.UpdateTime = time.Now().Unix()
 	if _, err := orm.NewOrm().Update(u, fields...); err != nil {
 		return err
 	}
@@ -69,11 +71,4 @@ func UserGetByName(username string) (*SysUser, error) {
 		return nil, err
 	}
 	return u, nil
-}
-
-func UserAdd(obj SysUser) (int64, error) {
-	if obj.Username == "" {
-		return 0, fmt.Errorf("组名不能为空")
-	}
-	return orm.NewOrm().Insert(obj)
 }

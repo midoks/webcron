@@ -6,14 +6,17 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1">用户名: </label>
                 <div class="col-sm-9">
+                    
                     <input name="vars[username]" class="col-xs-8 col-sm-2" type="text" value="{{.data.Username}}" required>
+                    
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1">密码: </label>
                 <div class="col-sm-9">
-                    <input name="vars[password]" class="col-xs-8 col-sm-2" type="password">
+                    <input name="vars[password]" class="col-xs-6 col-sm-2" type="password">
+                    <div class="col-xs-6 col-sm-4" style="color:red;">填写后,密码会被修改</div>
                 </div>
             </div>
 
@@ -76,7 +79,8 @@
                     </select>
                 </div>
             </div>
-
+            
+            <input name="id" type="hidden" value="{{.id}}">
             <div class="space-4"></div>
 
             <div class="clearfix form-actions">

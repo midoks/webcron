@@ -6,6 +6,12 @@ import (
 	"time"
 )
 
+const (
+	SYS  = 1
+	MAIL = 2
+	ERR  = 3
+)
+
 type SysLog struct {
 	Id      int
 	Uid     int

@@ -91,9 +91,18 @@ func (this *CommonController) auth() {
 		}
 	}
 
-	if this.user.Id == 0 && (this.controllerName != "login" && this.actionName != "out") {
+	// fmt.Println(this.user)
+
+	//跳到登录页
+	if (this.user == nil || this.user.Id == 0) && this.controllerName != "login" && (this.actionName != "out") {
 		this.redirect(beego.URLFor("LoginController.Index"))
 	}
+
+	//跳到首页
+	if (this.user != nil) && (this.controllerName == "login" && this.actionName == "index") {
+		this.redirect(beego.URLFor("IndexController.Index"))
+	}
+
 }
 
 // 是否POST提交
@@ -124,4 +133,20 @@ func (this *BaseController) display(tpl ...string) {
 
 	this.Layout = "layout/index.html"
 	this.TplName = tplname
+}
+
+// 输出json
+func (this *BaseController) retJson(out interface{}) {
+	this.Data["json"] = out
+	this.ServeJSON()
+	this.StopRun()
+}
+
+func (this *BaseController) retResult(code int, msg interface{}, data ...interface{}) {
+	out := make(map[string]interface{})
+	out["code"] = code
+	out["msg"] = msg
+	out["data"] = data
+
+	this.retJson(out)
 }

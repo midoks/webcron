@@ -16,6 +16,7 @@ type LoginController struct {
 
 func (this *LoginController) Prepare() {
 	this.initData()
+	this.auth()
 }
 
 func (this *LoginController) Index() {
@@ -49,7 +50,7 @@ func (this *LoginController) Index() {
 				this.redirect(beego.URLFor("IndexController.Index"))
 			}
 		}
-		this.D(username, password, remember)
+		//this.D(username, password, remember)
 	}
 
 	this.Data["errMsg"] = errMsg
