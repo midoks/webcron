@@ -38,14 +38,22 @@ func (this *SysLogController) Index() {
 	result, count := models.LogGetList(page, this.pageSize, filters...)
 
 	list := make([]map[string]interface{}, len(result))
+	uInfo := new(models.SysUser)
 
 	for k, v := range result {
 
 		row := make(map[string]interface{})
+		uInfo, _ = models.UserGetById(v.Uid)
 
 		row["id"] = v.Id
 		row["uid"] = v.Uid
-		row["username"] = "t"
+
+		if uInfo != nil {
+			row["username"] = uInfo.Username
+		} else {
+			row["username"] = "已经不存在"
+		}
+		
 		row["type"] = v.Type
 		row["msg"] = v.Msg
 		row["add_time"] = beego.Date(time.Unix(v.AddTime, 0), "Y-m-d H:i:s")

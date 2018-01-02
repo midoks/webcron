@@ -76,22 +76,54 @@ func (this *CommonController) initMenuData() {
 
 //登录状态验证
 func (this *CommonController) auth() {
+
 	arr := strings.Split(this.Ctx.GetCookie("auth"), "|")
 
 	if len(arr) == 2 {
 
 		idstr, password := arr[0], arr[1]
 		userId, _ := strconv.Atoi(idstr)
+
 		if userId > 0 {
 			user, err := models.UserGetById(userId)
-			if err == nil && password == libs.Md5([]byte(this.getClientIp()+"|"+user.Password)) {
+			if err == nil && password == libs.Md5([]byte(this.getClientIp()+"|"+user.Password) ) {
+	
 				this.user = user
 				this.Data["user"] = user
+				//role, _ := 
+				models.RoleGetById(user.Roleid)
+
+				menuNav, curMenuName, curMenuFuncName := models.FuncGetNav(this.controllerName, this.actionName)
+				
+				this.Data["curMenuName"] = curMenuName
+				this.Data["curMenuFuncName"] = curMenuFuncName
+
+				//newMenuNav := make([]models.SysFuncNav, len(menuNav))
+				
+				// isIn := false
+				// forNum := 0
+				// var cList []SysFunc
+
+				// for i := 0; i < len(menuNav); i++ {
+				// 	isIn = false
+				// 	cList := make([]models.SysFunc, menuNav[i].ListCount)
+				// 	for mi := 0; mi < menuNav[i].ListCount; mi++ {
+
+				// 		isIn = this.isIntInList(menuNav[i].List[mi].Id, role.List)
+				// 		if (isIn){
+				// 			cList
+				// 		}
+				// 	}
+
+				// 	if (isIn) {
+				// 		newMenuNav[forNum].Info = menuNav[i].Info
+				// 	}
+				// }
+
+				this.Data["menuNav"] = menuNav
 			}
 		}
 	}
-
-	// fmt.Println(this.user)
 
 	//跳到登录页
 	if (this.user == nil || this.user.Id == 0) && this.controllerName != "login" && (this.actionName != "out") {
@@ -103,6 +135,17 @@ func (this *CommonController) auth() {
 		this.redirect(beego.URLFor("IndexController.Index"))
 	}
 
+}
+
+func (this *CommonController) isIntInList(check int, list string) (out bool) {
+	out = false
+	numList := strings.Split(list, ",")
+	for i := 0; i < len(numList); i++ {
+		if numList[i] == strconv.Itoa(check) {
+			out = true
+		}
+	}
+	return out
 }
 
 // 是否POST提交
@@ -123,7 +166,7 @@ func (this *CommonController) getClientIp() string {
 }
 
 //渲染模版
-func (this *BaseController) display(tpl ...string) {
+func (this *CommonController) display(tpl ...string) {
 	var tplname string
 	if len(tpl) > 0 {
 		tplname = tpl[0] + ".html"
@@ -136,17 +179,28 @@ func (this *BaseController) display(tpl ...string) {
 }
 
 // 输出json
-func (this *BaseController) retJson(out interface{}) {
+func (this *CommonController) retJson(out interface{}) {
 	this.Data["json"] = out
 	this.ServeJSON()
 	this.StopRun()
 }
 
-func (this *BaseController) retResult(code int, msg interface{}, data ...interface{}) {
+func (this *CommonController) retResult(code int, msg interface{}, data ...interface{}) {
 	out := make(map[string]interface{})
 	out["code"] = code
 	out["msg"] = msg
-	out["data"] = data
+
+	if len(data) > 0 {
+		out["data"] = data
+	}
 
 	this.retJson(out)
+}
+
+func (this *CommonController) retOk(msg interface{}, data ...interface{}) {
+	this.retResult(MSG_OK, msg , data...)
+}
+
+func (this *CommonController) retFail(msg interface{}, data ...interface{}) {
+	this.retResult(MSG_ERR, msg , data...)
 }

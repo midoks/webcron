@@ -24,21 +24,20 @@
                 <tr>
                     <td>{{.Info.Id}}</td>
                     <td>
-                        <i class="{{$v.Info.Icon}}"></i>
-                        {{$v.Info.Name}}
-                        —
-                        <a data-toggle="collapse" title="子菜单" data-parent="#function-table" href="#function-{{$v.Info.Id}}">
+                        <i class="{{.Info.Icon}}"></i>
+                        {{.Info.Name}}--—
+                        <a data-toggle="collapse" title="子菜单" data-parent="#function-table" href="#function-{{.Info.Id}}">
                             <i class="glyphicon glyphicon-plus"></i>
                         </a>
                     </th>
 
                     <td>
-                        {{if eq 1 $v.Info.IsMenu}}
-                            <a class="blue" href="javascript:req('/{{$.curController}}/setmenu?id={{$v.Info.Id}}')">
+                        {{if eq 1 .Info.IsMenu}}
+                            <a class="blue" href="javascript:req('/{{$.curController}}/setmenu?id={{.Info.Id}}')">
 						      <span title="点击取消菜单显示" class="badge badge-warning">是</span>
                             </a>
                         {{else}} 
-                            <a class="blue" href="javascript:req('/{{$.curController}}/setmenu?id={{$v.Info.Id}}')">
+                            <a class="blue" href="javascript:req('/{{$.curController}}/setmenu?id={{.Info.Id}}')">
                                 <span class="badge" title="点击设置菜单显示">否</span>
                             </a>
                         {{end}}
@@ -47,35 +46,28 @@
                     <td>无</td>
                     <td>根</td>
                     <td>
-                        {{if eq 1 $v.Info.Status}}
-                            <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{$v.Info.Id}}')">
+                        {{if eq 1 .Info.Status}}
+                            <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{.Info.Id}}')">
                                 <span title="点击锁定" class="badge badge-warning">正常</span>
                             </a>
                         {{else}}
-                            <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{$v.Info.Id}}')">
+                            <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{.Info.Id}}')">
                                 <span title="点击解锁" class="badge">锁定</span>
                             </a> 
                         {{end}}
                     </td>
 
-                    <th>{{$v.Info.Sort}}</th>
+                    <th>{{.Info.Sort}}</th>
 
                     <td>
                         <div class="action-buttons">
-                        <a class="blue" title="菜单编辑" href="/{{$.curController}}/add?id={{$v.Info.Id}}">
+                        <a class="blue" title="菜单编辑" href="/{{$.curController}}/add?id={{.Info.Id}}">
                             <i class="fa fa-pencil bigger-130"></i>
                         </a>
 
-                        {{if eq 1 $v.Info.Status}}
-                            <a class="blue" title="点击锁定" href="javascript:del('/{{$.curController}}/lock?id={{$v.Info.Id}}')">
-                            <i class="fa fa-unlock bigger-130"></i></a> 
-                        {{else}}
-                            <a class="blue" title="点击解锁" href="javascript:del('/{{$.curController}}/lock?id={{$v.Info.Id}}')">
-                            <i class=" fa fa-lock bigger-130"></i></a> 
-                        {{end}}
 
                         {{if eq .ListCount 0}}
-                            <a class="blue" title="删除" href="javascript:del('/{{$.curController}}/del?id={{$v.Info.Id}}')">
+                            <a class="blue" title="删除" href="javascript:req('/{{$.curController}}/del?id={{$v.Info.Id}}')">
                             <i class="fa fa-trash-o bigger-130"></i></a>
                         {{end}}
                        
@@ -86,11 +78,6 @@
                         <a class="blue" href="javascript:req('/{{$.curController}}/sort?type=down&id={{$v.Info.Id}}')">
                             <i class="ace-icon glyphicon glyphicon-download" title="排序下降"></i>
                         </a>
-
-
-                        <!-- <a class="blue" href="javascript:req('/{{$.curController}}/sort?type=down&id={{$v.Info.Id}}')">
-                            {{.ListCount}}
-                        </a> -->
 
                         </div>
                     </td>
@@ -133,11 +120,11 @@
                             <td>/{{.Controller}}/{{.Action}}</td>
                             <td>隶属菜单：{{$v.Info.Name}}</td>
                             <td>{{if eq 1 .Status}}
-                                <a class="blue" href="javascript:del('/{{$.curController}}/lock?id={{.Id}}')">
+                                <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{.Id}}')">
                                     <span title="点击锁定" class="badge badge-warning">正常</span>
                                 </a>
                                 {{else}}
-                                <a class="blue" href="javascript:del('/{{$.curController}}/lock?id={{.Id}}')">
+                                <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{.Id}}')">
                                     <span title="点击解锁" class="badge">锁定</span>
                                 </a> 
                                 {{end}}
@@ -145,19 +132,11 @@
                             <td>{{$vc.Sort}}</td>
                             <td>
                                 <div class="action-buttons">
-                                    <a class="blue" title="功能编辑" href="/{{$.curController}}/add?id={{.Id}}">
-                                        <i class="fa fa-pencil bigger-130"></i>
-                                    </a>
-                                {{if eq 1 $vc.Status}}
-                                    <a	class="blue" title="点击锁定" href="javascript:req('/{{$.curController}}/lock?id={{.Id}}')">
-                                    <i class="fa fa-unlock bigger-130"></i>
-                                </a> 
-                                {{else}} 
-                                    <a class="blue" title="点击解锁" href="javascript:del('/{{$.curController}}/lock?id={{.Id}}')">
-                                    <i class=" fa fa-lock bigger-130"></i></a>
-                                {{end}}
+                                <a class="blue" title="功能编辑" href="/{{$.curController}}/add?id={{.Id}}">
+                                    <i class="fa fa-pencil bigger-130"></i>
+                                </a>
 
-                                <a class="blue" title="删除" href="javascript:del('/{{$.curController}}/del?id={{.Id}}')">
+                                <a class="blue" title="删除" href="javascript:req('/{{$.curController}}/del?id={{.Id}}')">
                                     <i class="fa fa-trash-o bigger-130"></i>
                                 </a>
                                 <a class="blue" href="javascript:req('/{{$.curController}}/sort?type=up&id={{.Id}}')">

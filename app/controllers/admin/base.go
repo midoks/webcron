@@ -1,6 +1,6 @@
 package controllers
 
-import ()
+//import ()
 
 type BaseController struct {
 	CommonController
@@ -9,8 +9,5 @@ type BaseController struct {
 func (this *BaseController) Prepare() {
 
 	this.initData()
-
 	this.auth()
-
-	this.initMenuData()
 }

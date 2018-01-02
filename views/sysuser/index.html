@@ -56,42 +56,42 @@
                 <tbody>
                     {{range  $k, $v := .list}}
                     <tr>
-                        <td>{{$v.id}}</td>
-                        <td>{{$v.username}}</td>
-                        <td>{{$v.nick}}</td>
+                        <td>{{$v.Id}}</td>
+                        <td>{{$v.Username}}</td>
+                        <td>{{$v.Nick}}</td>
                         <td>
-                            {{if eq 1 $v.sex}} 男
+                            {{if eq 1 $v.Sex}} 男
                             {{else}} 女
                             {{end}}
                         </td>
-                        <td>{{$v.mail}}</td>
-                        <td>{{$v.tel}}</td>
-                        <td>{{$v.role_name}}</td>
+                        <td>{{$v.Mail}}</td>
+                        <td>{{$v.Tel}}</td>
+                        <td>{{$v.Rolename}}</td>
                         <td>
-                            {{if eq 1 $v.status}}
-                            <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{$v.id}}')">
+                            {{if eq 1 $v.Status}}
+                            <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{$v.Id}}')">
                                 <span title="点击锁定" class="badge badge-warning">正常</span></a>
                             {{else}}
-                            <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{$v.id}}')">
+                            <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{$v.Id}}')">
                                 <span title="点击解锁" class="badge">锁定</span></a>
                             {{end}}
                         </td>
                         <td>
                             <div class="visible-md visible-lg action-buttons">
-                                <a class="blue" title="编辑" href="/{{$.curController}}/add?id={{$v.id}}">
+                                <a class="blue" title="编辑" href="/{{$.curController}}/add?id={{$v.Id}}">
                                     <i class="fa fa-pencil bigger-130"></i>
                                 </a>
-                                {{if eq 1 $v.status}} 
-                                <a class="blue" title="点击锁定" href="javascript:req('/{{$.curController}}/lock?id={{$v.id}}')">
+                                {{if eq 1 $v.Status}} 
+                                <a class="blue" title="点击锁定" href="javascript:req('/{{$.curController}}/lock?id={{$v.Id}}')">
                                     <i class="fa fa-unlock bigger-130"></i>
                                 </a> 
                                 {{else}} 
-                                <a class="blue" title="点击解锁" href="javascript:req('/{{$.curController}}/lock?id={{$v.id}}')">
+                                <a class="blue" title="点击解锁" href="javascript:req('/{{$.curController}}/lock?id={{$v.Id}}')">
                                 <i class=" fa fa-lock bigger-130"></i>
                                 </a> 
                                 {{end}}
                                 <a class="blue" title="删除"
-                                   href="javascript:del('/{{$.curController}}/del?id={{$v.id}}')">
+                                   href="javascript:req('/{{$.curController}}/del?id={{$v.Id}}')">
                                     <i class="fa fa-trash-o bigger-130"></i>
                                 </a>
                         </td>

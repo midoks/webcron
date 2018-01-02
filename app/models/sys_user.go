@@ -72,3 +72,9 @@ func UserGetByName(username string) (*SysUser, error) {
 	}
 	return u, nil
 }
+
+func UserDelById(id int) (int64,error) {
+	return orm.NewOrm().Delete(&SysUser{Id: id})
+}
+
+

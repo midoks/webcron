@@ -9,7 +9,7 @@ type SysRole struct {
 	Name       string
 	Desc       string
 	List       string
-	Status     string
+	Status     int
 	UpdateTime int64
 	CreateTime int64
 }
@@ -36,20 +36,14 @@ func RoleGetAll() ([]*SysRole, int64) {
 	return list, total
 }
 
-func RoleGetById(id int) (SysRole, error) {
+func RoleGetById(id int) (*SysRole, error) {
 
-	o := orm.NewOrm()
-	data := SysRole{Id: id}
-
-	err := o.Read(&data)
-
-	if err == orm.ErrNoRows {
-		return data, orm.ErrNoRows
-	} else if err == orm.ErrMissPK {
-		return data, orm.ErrMissPK
+	u := new(SysRole)
+	err := orm.NewOrm().QueryTable("sys_role").Filter("id", id).One(u)
+	if err != nil {
+		return nil, err
 	}
-
-	return data, nil
+	return u, nil
 }
 
 func RoleGetList(page, pageSize int, filters ...interface{}) ([]*SysRole, int64) {
@@ -71,4 +65,8 @@ func RoleGetList(page, pageSize int, filters ...interface{}) ([]*SysRole, int64)
 	query.OrderBy("-id").Limit(pageSize, offset).All(&list)
 
 	return list, total
+}
+
+func RoleDelById(id int) (int64,error) {
+	return orm.NewOrm().Delete(&SysRole{Id: id})
 }

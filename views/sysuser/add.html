@@ -15,8 +15,10 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1">密码: </label>
                 <div class="col-sm-9">
-                    <input name="vars[password]" class="col-xs-6 col-sm-2" type="password">
-                    <div class="col-xs-6 col-sm-4" style="color:red;">填写后,密码会被修改</div>
+                    <input name="vars[password]" class="col-xs-6 col-sm-2" type="password" {{if eq "" .id }}required{{end}}  >
+                    {{if ne "" .id }}
+                        <div class="col-xs-6 col-sm-4" style="color:red;">填写后,密码会被修改</div>
+                    {{end}}
                 </div>
             </div>
 

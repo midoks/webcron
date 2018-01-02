@@ -1,7 +1,7 @@
 package models
 
 import (
-	_ "fmt"
+	"fmt"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
 	"strings"
@@ -10,10 +10,11 @@ import (
 type SysFunc struct {
 	Id         int
 	Name       string
+	Pid        int
 	Controller string
 	Action     string
-	Type       string
-	IsMenu     int64
+	Type       int
+	IsMenu     int
 	Icon       string
 	Desc       string
 	Sort       int
@@ -75,28 +76,72 @@ func FuncGetNav(curController string, curAction string) (navNow []SysFuncNav, me
 	return nav, curMenuName, curMenuFuncName
 }
 
+func FuncInGetNav(in string,curController string, curAction string) (navNow []SysFuncNav,  menuNameNow string, funcNameNow string) {
+
+	o := orm.NewOrm()
+	var list []SysFunc
+
+	sql := ""
+	sql = fmt.Sprintf("select * from sys_func where pid=%d and `status`=%d order by sort asc", 0, 1)
+
+	res, _ := o.Raw(sql).QueryRows(&list)
+	nav := make([]SysFuncNav, len(list))
+	var curMenuName string = ""
+	var curMenuFuncName string = ""
+
+	if res > 0 {
+		for i := 0; i < len(list); i++ {
+			var cList []SysFunc
+			cres, _ := o.Raw("select * from sys_func where pid=? and `status`=? order by sort asc", list[i].Id, 1).QueryRows(&cList)
+			if cres > 0 {
+				nav[i].Info = list[i]
+				nav[i].List = cList
+				nav[i].ListCount = len(cList)
+				nav[i].MenuOpen = false
+
+				for ci := 0; ci < len(cList); ci++ {
+					if strings.EqualFold(cList[ci].Controller, curController) && strings.EqualFold(cList[ci].Action, curAction) {
+						nav[i].MenuOpen = true
+						curMenuName = list[i].Name
+						curMenuFuncName = cList[ci].Name
+					}
+				}
+			}
+		}
+	}
+	return nav, curMenuName, curMenuFuncName
+}
+
 func FuncGetList() []SysFuncNav {
 
 	o := orm.NewOrm()
 	var list []SysFunc
 
-	res, _ := o.Raw("select * from sys_func where pid=? and status=? order by sort asc", 0, 1).QueryRows(&list)
+	o.Raw("select * from sys_func where pid=? order by sort asc", 0).QueryRows(&list)
 	nav := make([]SysFuncNav, len(list))
 
-	if res > 0 {
-		for i := 0; i < len(list); i++ {
-			var cList []SysFunc
-			cres, _ := o.Raw("select * from sys_func where pid=? and status=? order by sort asc", list[i].Id, 1).QueryRows(&cList)
-			if cres > 0 {
-				nav[i].Info = list[i]
-				nav[i].List = cList
-				nav[i].ListCount = len(cList)
-			}
-		}
+	for i := 0; i < len(list); i++ {
+		var cList []SysFunc
+		o.Raw("select * from sys_func where pid=? order by sort asc", list[i].Id).QueryRows(&cList)
+		
+		nav[i].Info = list[i]
+		nav[i].List = cList
+		nav[i].ListCount = len(cList)
 	}
-
 	return nav
 }
+
+
+func FuncGetListByPid(pid int64) ([]SysFunc, error) {
+
+	o := orm.NewOrm()
+	var cList []SysFunc
+	cres, cerr :=  o.Raw("select * from sys_func where pid=? and status=? order by sort asc", pid, 1).QueryRows(&cList)
+	if cres > 0 {
+		return cList, nil
+	}
+	return cList, cerr
+} 
 
 func FuncGetById(id int) (*SysFunc, error) {
 
@@ -109,3 +154,9 @@ func FuncGetById(id int) (*SysFunc, error) {
 	}
 	return sysfunc, nil
 }
+
+func FuncDelById(id int) (int64,error) {
+	return orm.NewOrm().Delete(&SysFunc{Id: id})
+}
+
+

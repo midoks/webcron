@@ -26,14 +26,25 @@ function del(url, callback) {
 
 function req(url, callback) {
     if (confirm("是否确定执行操作?")) {
-        $.get(url, function (msg) {
-            if (msg == 'ok') {
+        
+        if (url.indexOf("?")){
+            url += "&_t=" + (new Date()).getTime(); 
+        } else {
+            url += "?_t=" + (new Date()).getTime();
+        }
+        
+        $.getJSON(url, function (data) {
+            //console.log(data);
+            if (data['code'] == 0) {
                 alert('操作成功！');
                 refresh();
-            } else if (msg == 'callback') {
-                callback();
-            } else {
-                alert(msg);
+            } else if(data['code']>0){
+                if (typeof callback == "function"){
+                    callback(data["data"])
+                }
+                refresh();
+            } else{
+                alert(data["msg"]);
             }
         });
     }

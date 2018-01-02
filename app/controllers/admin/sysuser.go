@@ -44,22 +44,22 @@ func (this *SysUserController) Index() {
 
 		roleData, _ := models.RoleGetById(v.Roleid)
 
-		row["id"] = v.Id
-		row["username"] = v.Username
-		row["nick"] = v.Nick
-		row["sex"] = v.Sex
-		row["mail"] = v.Mail
-		row["tel"] = v.Tel
-		row["roleid"] = v.Roleid
+		row["Id"] = v.Id
+		row["Username"] = v.Username
+		row["Nick"] = v.Nick
+		row["Sex"] = v.Sex
+		row["Mail"] = v.Mail
+		row["Tel"] = v.Tel
+		row["Roleid"] = v.Roleid
 		if roleData.Name == "" {
-			row["role_name"] = "无权限"
+			row["Rolename"] = "无权限"
 		} else {
-			row["role_name"] = roleData.Name
+			row["Rolename"] = roleData.Name
 		}
 
-		row["status"] = v.Status
-		row["update_time"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
-		row["create_time"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
+		row["Status"] = v.Status
+		row["UpdateTime"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
+		row["CreateTime"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
 
 		list[k] = row
 	}
@@ -101,6 +101,7 @@ func (this *SysUserController) Add() {
 
 	data := new(models.SysUser)
 	id, err := this.GetInt("id")
+
 	if err == nil {
 		data, _ = models.UserGetById(id)
 	}
@@ -110,46 +111,37 @@ func (this *SysUserController) Add() {
 		vars := make(map[string]string)
 		this.Ctx.Input.Bind(&vars, "vars")
 
-		if id > 0 {
-			data.Username = vars["username"]
-			if vars["password"] != "" {
-				data.Password = libs.Md5([]byte(vars["password"]))
-			}
+		if vars["password"] != "" {
+			data.Password = libs.Md5([]byte(vars["password"]))
+		}
 
-			data.Nick = vars["nick"]
-			data.Mail = vars["mail"]
-			data.Tel = vars["tel"]
-			data.Roleid, _ = strconv.Atoi(vars["roleid"])
-			data.Sex, _ = strconv.Atoi(vars["sex"])
+		data.Nick = vars["nick"]
+		data.Mail = vars["mail"]
+		data.Tel = vars["tel"]
+		data.Roleid, _ = strconv.Atoi(vars["roleid"])
+		data.Sex, _ = strconv.Atoi(vars["sex"])
+
+		if id > 0 {
+			
+			data.UpdateTime = time.Now().Unix()
 			err := data.Update()
 			if err == nil {
 				msg := fmt.Sprintf("更新用户的ID:%d|%s", id, data)
 				this.uLog(msg)
 				this.redirect(beego.URLFor("SysUserController.Index"))
 			}
-
 		} else {
 
-			var u models.SysUser
+			data.Status = 0
+			data.UpdateTime = time.Now().Unix()
+			data.CreateTime = time.Now().Unix()
 
-			u.Username = vars["username"]
-			u.Password = libs.Md5([]byte(vars["password"]))
-			u.Nick = vars["nick"]
-			u.Mail = vars["mail"]
-			u.Tel = vars["tel"]
-			u.Roleid, _ = strconv.Atoi(vars["roleid"])
-			u.Sex, _ = strconv.Atoi(vars["sex"])
-			u.Status = 0
-			u.CreateTime = time.Now().Unix()
-			u.UpdateTime = time.Now().Unix()
-
-			id, err := orm.NewOrm().Insert(&u)
+			id, err := orm.NewOrm().Insert(&data)
 			if err == nil {
 				msg := fmt.Sprintf("添加用户的ID:%d", id)
 				this.uLog(msg)
 				this.redirect(beego.URLFor("SysUserController.Index"))
 			}
-
 		}
 	}
 
@@ -165,13 +157,36 @@ func (this *SysUserController) Add() {
 func (this *SysUserController) Lock() {
 
 	id, err := this.GetInt("id")
-
 	if err == nil {
 		data, _ := models.UserGetById(id)
-		data.Password = ""
-		this.retResult(1, "123123", data)
-	}
 
-	fmt.Println(id, err)
-	this.retResult(1, "123123")
+		if data.Status > 0 {
+			data.Status = -1
+			this.uLog("锁定成功")
+		} else {
+			data.Status = 1
+			this.uLog("解锁成功")
+		}
+		err = data.Update()
+		
+		if err == nil{
+			this.retOk("修改成功")
+		}
+	}
+	this.retFail("修改失败")
 }
+
+func (this *SysUserController) Del() {
+
+	id, err := this.GetInt("id")
+	if err == nil {
+		num, err := models.UserDelById(id)
+		if err == nil {
+			msg := fmt.Sprintf("删除用户%s成功",num)
+			this.uLog(msg)
+			this.retOk(msg)
+		}
+	}
+	this.retFail("非法参数")
+}
+
