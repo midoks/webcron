@@ -42,7 +42,7 @@ func (this *SysUserController) Index() {
 
 		row := make(map[string]interface{})
 
-		roleData, _ := models.RoleGetById(v.Roleid)
+		roleData, roleErr := models.RoleGetById(v.Roleid)
 
 		row["Id"] = v.Id
 		row["Username"] = v.Username
@@ -51,7 +51,7 @@ func (this *SysUserController) Index() {
 		row["Mail"] = v.Mail
 		row["Tel"] = v.Tel
 		row["Roleid"] = v.Roleid
-		if roleData.Name == "" {
+		if roleErr != nil || roleData.Name == "" {
 			row["Rolename"] = "无权限"
 		} else {
 			row["Rolename"] = roleData.Name
@@ -122,7 +122,7 @@ func (this *SysUserController) Add() {
 		data.Sex, _ = strconv.Atoi(vars["sex"])
 
 		if id > 0 {
-			
+
 			data.UpdateTime = time.Now().Unix()
 			err := data.Update()
 			if err == nil {
@@ -168,8 +168,8 @@ func (this *SysUserController) Lock() {
 			this.uLog("解锁成功")
 		}
 		err = data.Update()
-		
-		if err == nil{
+
+		if err == nil {
 			this.retOk("修改成功")
 		}
 	}
@@ -182,11 +182,10 @@ func (this *SysUserController) Del() {
 	if err == nil {
 		num, err := models.UserDelById(id)
 		if err == nil {
-			msg := fmt.Sprintf("删除用户%s成功",num)
+			msg := fmt.Sprintf("删除用户%s成功", num)
 			this.uLog(msg)
 			this.retOk(msg)
 		}
 	}
 	this.retFail("非法参数")
 }
-

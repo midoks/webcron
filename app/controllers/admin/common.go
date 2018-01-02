@@ -65,15 +65,6 @@ func (this *CommonController) initData() {
 
 }
 
-func (this *CommonController) initMenuData() {
-
-	//菜单导航
-	menuNav, curMenuName, curMenuFuncName := models.FuncGetNav(this.controllerName, this.actionName)
-	this.Data["menuNav"] = menuNav
-	this.Data["curMenuName"] = curMenuName
-	this.Data["curMenuFuncName"] = curMenuFuncName
-}
-
 //登录状态验证
 func (this *CommonController) auth() {
 
@@ -86,41 +77,42 @@ func (this *CommonController) auth() {
 
 		if userId > 0 {
 			user, err := models.UserGetById(userId)
-			if err == nil && password == libs.Md5([]byte(this.getClientIp()+"|"+user.Password) ) {
-	
+			if err == nil && password == libs.Md5([]byte(this.getClientIp()+"|"+user.Password)) {
+
 				this.user = user
 				this.Data["user"] = user
-				//role, _ := 
-				models.RoleGetById(user.Roleid)
+				role, _ := models.RoleGetById(user.Roleid)
 
 				menuNav, curMenuName, curMenuFuncName := models.FuncGetNav(this.controllerName, this.actionName)
-				
+
 				this.Data["curMenuName"] = curMenuName
 				this.Data["curMenuFuncName"] = curMenuFuncName
 
-				//newMenuNav := make([]models.SysFuncNav, len(menuNav))
-				
-				// isIn := false
-				// forNum := 0
-				// var cList []SysFunc
+				newMenuNav := make([]models.SysFuncNav, 0)
 
-				// for i := 0; i < len(menuNav); i++ {
-				// 	isIn = false
-				// 	cList := make([]models.SysFunc, menuNav[i].ListCount)
-				// 	for mi := 0; mi < menuNav[i].ListCount; mi++ {
+				var tmpMenuNav models.SysFuncNav
+				var menuList []models.SysFunc
 
-				// 		isIn = this.isIntInList(menuNav[i].List[mi].Id, role.List)
-				// 		if (isIn){
-				// 			cList
-				// 		}
-				// 	}
+				for i := 0; i < len(menuNav); i++ {
 
-				// 	if (isIn) {
-				// 		newMenuNav[forNum].Info = menuNav[i].Info
-				// 	}
-				// }
+					menuList = make([]models.SysFunc, 0)
 
-				this.Data["menuNav"] = menuNav
+					for mi := 0; mi < menuNav[i].ListCount; mi++ {
+						if this.isIntInList(menuNav[i].List[mi].Id, role.List) {
+							menuList = append(menuList, menuNav[i].List[mi])
+						}
+					}
+
+					if len(menuList) > 0 {
+
+						tmpMenuNav.Info = menuNav[i].Info
+						tmpMenuNav.List = menuList
+						tmpMenuNav.MenuOpen = menuNav[i].MenuOpen
+						tmpMenuNav.ListCount = menuNav[i].ListCount
+						newMenuNav = append(newMenuNav, tmpMenuNav)
+					}
+				}
+				this.Data["menuNav"] = newMenuNav
 			}
 		}
 	}
@@ -198,9 +190,9 @@ func (this *CommonController) retResult(code int, msg interface{}, data ...inter
 }
 
 func (this *CommonController) retOk(msg interface{}, data ...interface{}) {
-	this.retResult(MSG_OK, msg , data...)
+	this.retResult(MSG_OK, msg, data...)
 }
 
 func (this *CommonController) retFail(msg interface{}, data ...interface{}) {
-	this.retResult(MSG_ERR, msg , data...)
+	this.retResult(MSG_ERR, msg, data...)
 }
