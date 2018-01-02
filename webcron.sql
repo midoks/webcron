@@ -18,7 +18,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for `app_debugs`
 -- ----------------------------
-DROP TABLE IF EXISTS `wc_debugs`;
+DROP TABLE IF EXISTS `app_debugs`;
 CREATE TABLE `app_debugs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE `sys_func` (
   `create_time` int(10),
   PRIMARY KEY (`id`),
   KEY `pid` (`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COMMENT='权限列表';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='权限列表';
 
 -- ----------------------------
 -- Records of sys_func
@@ -59,26 +59,20 @@ CREATE TABLE `sys_func` (
 INSERT INTO `sys_func` VALUES ('1', '系统设置', '0', 'sys', 'index', '0', '1', 'fa fa-cog', '系统相关参数设置', '0', '1', '1489429439', '1489429439');
 INSERT INTO `sys_func` VALUES ('2', '管理员管理', '1', 'sysuser', 'index', '1', '1', 'fa fa-users', '添加、删除、编辑系统管理员的权限。', '0', '1', '1489429439', '1489429439');
 INSERT INTO `sys_func` VALUES ('3', '系统功能添加', '1', 'sysfunc', 'add', '1', '0', 'glyphicon glyphicon-th', '系统功能添加', '6', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('5', '功能管理', '1', 'sysfunc', 'index', '1', '1', '', '功能列表', '7', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('6', '系统功能删除', '1', 'sysfunc', 'del', '1', '0', '', '系统功能删除', '8', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('7', '添加管理员', '1', 'sysuser', 'add', '1', '0', 'glyphicon glyphicon-user', '添加管理员', '1', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('9', '管理员删除', '1', 'sysuser', 'del', '1', '0', '', '管理员删除', '2', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('11', '重置管理员密码', '1', 'sysuser', 'repwd', '1', '0', '', '重置管理员密码', '3', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('12', '锁定管理员', '1', 'sysuser', 'lock', '1', '0', '', '锁定管理员', '4', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('13', '系统功能锁定', '1', 'sysfunc', 'lock', '1', '0', '', '系统功能锁定', '9', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('14', '角色管理', '1', 'sysrole', 'index', '1', '1', 'fa fa-users', '系统功能锁定', '10', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('15', '添加角色', '1', 'sysrole', 'add', '1', '0', 'fa fa-users', '添加角色', '11', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('17', '删除角色', '1', 'sysrole', 'del', '1', '0', 'fa fa-users', '删除角色', '12', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('18', '锁定角色', '1', 'sysrole', 'lock', '1', '0', 'fa fa-users', '锁定角色', '13', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('19', '功能设置菜单', '1', 'sysfunc', 'setmenu', '1', '0', '', '功能设置菜单', '9', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('22', '加密相关', '0', 'mima', 'init', '0', '1', 'fa fa-bell', '', '1', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('23', 'authcode', '22', 'encrypt', 'index', '1', '1', '', 'discuz加密解密方案', '0', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('30', '功能升降序', '1', 'sysfunc', 'sort', '1', '0', '', '功能升降序', '5', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('31', '后台模版事例', '0', 'tpl', 'index', '0', '1', 'glyphicon glyphicon-star-empty', '后台模版事例', '2', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('32', '异步上传', '31', 'tpl', 'index', '1', '1', '', '', '0', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('33', '监控', '0', 'monitor', 'index', '0', '1', 'fa fa-bullhorn', '', '3', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('34', '列表', '33', 'monitor', 'index', '1', '1', '', '列表', '99', '1', '1489429439', '1489429439');
-INSERT INTO `sys_func` VALUES ('37', '日志管理', '1', 'syslog', 'index', '1', '1', '', '日志管理', '99', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('4', '功能管理', '1', 'sysfunc', 'index', '1', '1', '', '功能列表', '7', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('5', '系统功能删除', '1', 'sysfunc', 'del', '1', '0', '', '系统功能删除', '8', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('6', '添加管理员', '1', 'sysuser', 'add', '1', '0', 'glyphicon glyphicon-user', '添加管理员', '1', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('7', '管理员删除', '1', 'sysuser', 'del', '1', '0', '', '管理员删除', '2', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('8', '重置管理员密码', '1', 'sysuser', 'repwd', '1', '0', '', '重置管理员密码', '3', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('9', '锁定管理员', '1', 'sysuser', 'lock', '1', '0', '', '锁定管理员', '4', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('10', '系统功能锁定', '1', 'sysfunc', 'lock', '1', '0', '', '系统功能锁定', '9', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('11', '角色管理', '1', 'sysrole', 'index', '1', '1', 'fa fa-users', '系统功能锁定', '10', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('12', '添加角色', '1', 'sysrole', 'add', '1', '0', 'fa fa-users', '添加角色', '11', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('13', '删除角色', '1', 'sysrole', 'del', '1', '0', 'fa fa-users', '删除角色', '12', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('14', '锁定角色', '1', 'sysrole', 'lock', '1', '0', 'fa fa-users', '锁定角色', '13', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('15', '功能设置菜单', '1', 'sysfunc', 'setmenu', '1', '0', '', '功能设置菜单', '9', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('16', '功能升降序', '1', 'sysfunc', 'sort', '1', '0', '', '功能升降序', '5', '1', '1489429439', '1489429439');
+INSERT INTO `sys_func` VALUES ('17', '日志管理', '1', 'syslog', 'index', '1', '1', '', '日志管理', '99', '1', '1489429439', '1489429439');
 
 -- ----------------------------
 -- Table structure for `sys_logs`
@@ -91,13 +85,7 @@ CREATE TABLE `sys_logs` (
   `msg` text NOT NULL,
   `add_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
-
--- ----------------------------
--- Records of sys_logs
--- ----------------------------
-INSERT INTO `sys_logs` VALUES ('1', '1', '1', '1', '1510207207');
-INSERT INTO `sys_logs` VALUES ('4', '3', '1', '登录成功', '1511759612');
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for `sys_role`
@@ -112,13 +100,13 @@ CREATE TABLE `sys_role` (
   `update_time` int(10),
   `create_time` int(10),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='管理员权限表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='管理员权限表';
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES ('1', '系统管理员', '系统总管理员', '2,7,9,11,12,30,3,5,6,13,19,14,15,17,18,37,23,32,34', '1', '1489429439', '1489429439');
-INSERT INTO `sys_role` VALUES ('3', '编辑', '普通编辑人员', '2,14,15,17,18,23,32', '1', '1489429439', '1489429439');
+INSERT INTO `sys_role` VALUES ('1', '管理员', '系统总管理员', '2,6,7,8,9,16,3,4,5,10,15,11,12,13,14,17', '1', '1489429439', '1489429439');
+INSERT INTO `sys_role` VALUES ('2', '编辑', '编辑人员', '2,14,15,17,18,23,32', '1', '1489429439', '1489429439');
 
 -- ----------------------------
 -- Table structure for `sys_user`
@@ -137,10 +125,10 @@ CREATE TABLE `sys_user` (
   `update_time` int(10),
   `create_time` int(10),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='管理员';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='管理员';
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('3', 'admin', '21232f297a57a5a743894a0e4a801fc3', '管理员', '1', 'admin@localhost', '13000000000', '1', '1', '1489429439', '1489429439');
-INSERT INTO `sys_user` VALUES ('4', 'guest', '084e0343a0486ff05530df6c705c8bb4', 'guest', '1', '13800138000@qq.com', '13800138000', '3', '1', '1489429439', '1489429439');
+INSERT INTO `sys_user` VALUES ('1', 'admin', '21232f297a57a5a743894a0e4a801fc3', '管理员', '1', 'admin@localhost', '13000000000', '1', '1', '1489429439', '1489429439');
+INSERT INTO `sys_user` VALUES ('2', 'guest', '084e0343a0486ff05530df6c705c8bb4', 'guest', '1', '13800138000@qq.com', '13800138000', '2', '1', '1489429439', '1489429439');
