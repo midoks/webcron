@@ -16,6 +16,22 @@ Date: 2017-11-27 15:04:55
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
+-- Table structure for `app_auth`
+-- ----------------------------
+DROP TABLE IF EXISTS `app_auth`;
+CREATE TABLE `app_auth` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) DEFAULT NULL COMMENT '授权用户',
+  `item_id` int(11) DEFAULT NULL COMMENT '授权项目',
+  `create_time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of app_auth
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for `app_debugs`
 -- ----------------------------
 DROP TABLE IF EXISTS `app_debugs`;
@@ -30,6 +46,67 @@ CREATE TABLE `app_debugs` (
 -- ----------------------------
 -- Records of app_debugs
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for `app_item`
+-- ----------------------------
+DROP TABLE IF EXISTS `app_item`;
+CREATE TABLE `app_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL DEFAULT '0',
+  `desc` varchar(100) NOT NULL DEFAULT '0',
+  `type` tinyint(4) NOT NULL DEFAULT '0',
+  `server_id` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='项目';
+
+-- ----------------------------
+-- Records of app_item
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `app_server`
+-- ----------------------------
+DROP TABLE IF EXISTS `app_server`;
+CREATE TABLE `app_server` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(50) NOT NULL DEFAULT '0',
+  `desc` varchar(50) NOT NULL DEFAULT '0',
+  `user` varchar(50) NOT NULL DEFAULT '0',
+  `password` varchar(50) NOT NULL DEFAULT '0',
+  `pub_key` text NOT NULL,
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='服务器管理';
+
+-- ----------------------------
+-- Records of app_server
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `app_task`
+-- ----------------------------
+DROP TABLE IF EXISTS `app_task`;
+CREATE TABLE `app_task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `item_id` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL DEFAULT '0',
+  `desc` varchar(50) NOT NULL DEFAULT '0',
+  `cron_spec` varchar(100) NOT NULL DEFAULT '0',
+  `cmd` text NOT NULL,
+  `exec_num` int(11) NOT NULL DEFAULT '0',
+  `prev_time` int(11) NOT NULL DEFAULT '0',
+  `notify` tinyint(4) NOT NULL DEFAULT '0',
+  `timeout` int(11) NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='运行任务';
+
 
 -- ----------------------------
 -- Table structure for `sys_func`
@@ -73,6 +150,10 @@ INSERT INTO `sys_func` VALUES ('14', '锁定角色', '1', 'sysrole', 'lock', '1'
 INSERT INTO `sys_func` VALUES ('15', '功能设置菜单', '1', 'sysfunc', 'setmenu', '1', '0', '', '功能设置菜单', '9', '1', '1489429439', '1489429439');
 INSERT INTO `sys_func` VALUES ('16', '功能升降序', '1', 'sysfunc', 'sort', '1', '0', '', '功能升降序', '5', '1', '1489429439', '1489429439');
 INSERT INTO `sys_func` VALUES ('17', '日志管理', '1', 'syslog', 'index', '1', '1', '', '日志管理', '99', '1', '1489429439', '1489429439');
+
+INSERT INTO `sys_func` VALUES ('18', '项目管理', '0', 'item', 'index', '0', '1', 'glyphicon glyphicon-th-large', '项目管理 - 列表', '1','1', '1514871562', '1514871452');
+INSERT INTO `sys_func` VALUES ('19', '项目列表', '18', 'item', 'index', '0', '1', '', '项目列表', '0', '1', '1514871738', '1514871585');
+  
 
 -- ----------------------------
 -- Table structure for `sys_logs`
