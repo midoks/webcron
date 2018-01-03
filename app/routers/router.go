@@ -10,6 +10,7 @@ func init() {
 
 	models.Init()
 
+	//基础
 	beego.Router("/", &controllers.IndexController{}, "*:Index")
 	beego.AutoRouter(&controllers.LoginController{})
 	beego.AutoRouter(&controllers.IndexController{})
@@ -17,5 +18,8 @@ func init() {
 	beego.AutoRouter(&controllers.SysFuncController{})
 	beego.AutoRouter(&controllers.SysRoleController{})
 	beego.AutoRouter(&controllers.SysLogController{})
+
+	//功能开发
+	beego.AutoRouter(&controllers.AppItemController{})
 
 }
