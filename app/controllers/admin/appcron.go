@@ -11,11 +11,11 @@ import (
 	"time"
 )
 
-type AppItemController struct {
+type AppCronController struct {
 	BaseController
 }
 
-func (this *AppItemController) Index() {
+func (this *AppCronController) Index() {
 	page, _ := this.GetInt("page")
 	if page < 1 {
 		page = 1
@@ -60,7 +60,7 @@ func (this *AppItemController) Index() {
 	this.display()
 }
 
-func (this *AppItemController) Add() {
+func (this *AppCronController) Add() {
 
 	data := new(models.AppItem)
 	id, err := this.GetInt("id")
@@ -110,7 +110,7 @@ func (this *AppItemController) Add() {
 	this.display()
 }
 
-func (this *AppItemController) Lock() {
+func (this *AppCronController) Lock() {
 
 	id, err := this.GetInt("id")
 	if err == nil {
@@ -132,7 +132,7 @@ func (this *AppItemController) Lock() {
 	this.retFail("修改失败")
 }
 
-func (this *AppItemController) Del() {
+func (this *AppCronController) Del() {
 
 	id, err := this.GetInt("id")
 	if err == nil {

@@ -41,15 +41,17 @@ func (u *SysFunc) Update(fields ...string) error {
 	return nil
 }
 
-func FuncGetNav(curController string, curAction string) (navNow []SysFuncNav, menuNameNow string, funcNameNow string) {
+func FuncGetNav(curController string, curAction string) (navNow []SysFuncNav, menuNameNow string, funcNameNow string, isAuthNow bool) {
 
 	o := orm.NewOrm()
 	var list []SysFunc
 
 	res, _ := o.Raw("select * from sys_func where pid=? and status=? order by sort asc", 0, 1).QueryRows(&list)
 	nav := make([]SysFuncNav, len(list))
+
 	var curMenuName string = ""
 	var curMenuFuncName string = ""
+	var isAuth bool = false
 
 	if res > 0 {
 		for i := 0; i < len(list); i++ {
@@ -67,16 +69,18 @@ func FuncGetNav(curController string, curAction string) (navNow []SysFuncNav, me
 						// fmt.Println("debug:", cList[ci].Controller, curController, cList[ci].Action, curAction)
 						curMenuName = list[i].Name
 						curMenuFuncName = cList[ci].Name
+
+						isAuth = true
 					}
 				}
 			}
 		}
 	}
 
-	return nav, curMenuName, curMenuFuncName
+	return nav, curMenuName, curMenuFuncName, isAuth
 }
 
-func FuncInGetNav(in string,curController string, curAction string) (navNow []SysFuncNav,  menuNameNow string, funcNameNow string) {
+func FuncInGetNav(in string, curController string, curAction string) (navNow []SysFuncNav, menuNameNow string, funcNameNow string) {
 
 	o := orm.NewOrm()
 	var list []SysFunc
@@ -123,7 +127,7 @@ func FuncGetList() []SysFuncNav {
 	for i := 0; i < len(list); i++ {
 		var cList []SysFunc
 		o.Raw("select * from sys_func where pid=? order by sort asc", list[i].Id).QueryRows(&cList)
-		
+
 		nav[i].Info = list[i]
 		nav[i].List = cList
 		nav[i].ListCount = len(cList)
@@ -131,17 +135,16 @@ func FuncGetList() []SysFuncNav {
 	return nav
 }
 
-
 func FuncGetListByPid(pid int64) ([]SysFunc, error) {
 
 	o := orm.NewOrm()
 	var cList []SysFunc
-	cres, cerr :=  o.Raw("select * from sys_func where pid=? and status=? order by sort asc", pid, 1).QueryRows(&cList)
+	cres, cerr := o.Raw("select * from sys_func where pid=? and status=? order by sort asc", pid, 1).QueryRows(&cList)
 	if cres > 0 {
 		return cList, nil
 	}
 	return cList, cerr
-} 
+}
 
 func FuncGetById(id int) (*SysFunc, error) {
 
@@ -155,8 +158,6 @@ func FuncGetById(id int) (*SysFunc, error) {
 	return sysfunc, nil
 }
 
-func FuncDelById(id int) (int64,error) {
+func FuncDelById(id int) (int64, error) {
 	return orm.NewOrm().Delete(&SysFunc{Id: id})
 }
-
-

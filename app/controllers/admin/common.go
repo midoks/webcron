@@ -83,7 +83,11 @@ func (this *CommonController) auth() {
 				this.Data["user"] = user
 				role, _ := models.RoleGetById(user.Roleid)
 
-				menuNav, curMenuName, curMenuFuncName := models.FuncGetNav(this.controllerName, this.actionName)
+				menuNav, curMenuName, curMenuFuncName, isAuth := models.FuncGetNav(this.controllerName, this.actionName)
+
+				if !isAuth {
+					this.retFail("无权访问")
+				}
 
 				this.Data["curMenuName"] = curMenuName
 				this.Data["curMenuFuncName"] = curMenuFuncName
@@ -112,6 +116,7 @@ func (this *CommonController) auth() {
 						newMenuNav = append(newMenuNav, tmpMenuNav)
 					}
 				}
+
 				this.Data["menuNav"] = newMenuNav
 			}
 		}

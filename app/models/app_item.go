@@ -39,7 +39,7 @@ func ItemGetList(page, pageSize int, filters ...interface{}) ([]*AppItem, int64)
 	if len(filters) > 0 {
 		l := len(filters)
 		for k := 0; k < l; k += 2 {
-			print(filters[k].(string), filters[k+1])
+			// print(filters[k].(string), filters[k+1])
 			query = query.Filter(filters[k].(string), filters[k+1])
 		}
 	}
@@ -60,10 +60,10 @@ func ItemGetById(id int) (*AppItem, error) {
 	return u, nil
 }
 
-func ItemGetByName(username string) (*AppItem, error) {
+func ItemGetByName(name string) (*AppItem, error) {
 
 	u := new(AppItem)
-	err := orm.NewOrm().QueryTable(TableName("item")).Filter("username", username).One(u)
+	err := orm.NewOrm().QueryTable(TableName("item")).Filter("name", name).One(u)
 	if err != nil {
 		return nil, err
 	}

@@ -21,5 +21,8 @@ func init() {
 
 	//功能开发
 	beego.AutoRouter(&controllers.AppItemController{})
+	beego.AutoRouter(&controllers.AppServerController{})
+	beego.AutoRouter(&controllers.AppCronController{})
+	beego.AutoRouter(&controllers.AppDebugController{})
 
 }
