@@ -6,7 +6,7 @@
                 <tr>
                     <td class="col-xs-3 col-sm-1">
                         <select id="search_type" name="search_type">
-                            <option value="id" {{if eq "id" .search_type}}selected="selected"{{end}}>项目ID</option>
+                            <option value="id" {{if eq "id" .search_type}}selected="selected"{{end}}>序号</option>
                         </select>
                     </td>
 
@@ -33,13 +33,13 @@
                 <thead>
                 <tr>
                     <th class="col-sm-1">序号</th>
-                    <th class="col-sm-1">项目名</th>
-                    <th class="col-sm-1">项目描述</th>
+                    <th class="col-sm-1">名称</th>
+                    <th class="col-sm-1">描述</th>
                     <th class="col-sm-2">更新时间</th>
                     <th class="col-sm-2">创建时间</th>
                     <th style="width: 80px;">状态</th>
                     <th>
-                        <a class="blue" title="新增项目" href="/{{.curController}}/add">
+                        <a class="blue" title="新增服务器" href="/{{.curController}}/add">
                             <i class="glyphicon glyphicon-plus bigger-130"></i>
                         </a>
                     </th>

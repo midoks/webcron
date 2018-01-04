@@ -99,9 +99,7 @@ CREATE TABLE IF NOT EXISTS `app_item` (
 
 INSERT INTO `app_item` (`id`, `name`, `desc`, `type`, `server_id`, `status`, `update_time`, `create_time`) VALUES
 (1, '10', '1', 1, '0', 1, 1515035172, 0),
-(2, '11', '11', 0, '', 0, 1515036059, 1515035827),
-(3, 'asdf', 'adasdf', 0, '', 1, 1515036783, 1515035843),
-(4, 'asd', 'dd', 0, '', 1, 1515036716, 1515035914);
+(2, '11', '11', 0, '', 0, 1515036059, 1515035827);
 
 -- --------------------------------------------------------
 
@@ -111,14 +109,17 @@ INSERT INTO `app_item` (`id`, `name`, `desc`, `type`, `server_id`, `status`, `up
 
 DROP TABLE IF EXISTS `app_server`;
 CREATE TABLE IF NOT EXISTS `app_server` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(50) NOT NULL DEFAULT '0',
-  `desc` varchar(50) NOT NULL DEFAULT '0',
-  `user` varchar(50) NOT NULL DEFAULT '0',
-  `password` varchar(50) NOT NULL DEFAULT '0',
-  `pub_key` text NOT NULL,
-  `update_time` int(11) NOT NULL DEFAULT '0',
-  `create_time` int(11) NOT NULL DEFAULT '0',
+  `id`  int(11) NOT NULL AUTO_INCREMENT ,
+  `name`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' ,
+  `desc`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+  `ip`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' ,
+  `type`  tinyint(4) NULL DEFAULT NULL ,
+  `user`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' ,
+  `pwd`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' ,
+  `pub_key`  text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  `status`  tinyint(4) NOT NULL ,
+  `update_time`  int(11) NOT NULL DEFAULT 0 ,
+  `create_time`  int(11) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='服务器管理' AUTO_INCREMENT=1 ;
 

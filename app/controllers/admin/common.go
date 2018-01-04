@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	_ "fmt"
+	"fmt"
 	"github.com/astaxie/beego"
 	_ "github.com/astaxie/beego/logs"
 	"github.com/midoks/webcron/app/libs"
@@ -85,10 +85,6 @@ func (this *CommonController) auth() {
 
 				menuNav, curMenuName, curMenuFuncName, isAuth := models.FuncGetNav(this.controllerName, this.actionName)
 
-				if !isAuth {
-					this.retFail("无权访问")
-				}
-
 				this.Data["curMenuName"] = curMenuName
 				this.Data["curMenuFuncName"] = curMenuFuncName
 
@@ -118,6 +114,20 @@ func (this *CommonController) auth() {
 				}
 
 				this.Data["menuNav"] = newMenuNav
+
+				if !isAuth {
+					xrw := this.Ctx.Input.Header("X-Requested-With")
+					if strings.EqualFold(xrw, "XMLHttpRequest") {
+						this.retFail("无权访问")
+					} else {
+						this.display("layout", "nopower")
+						this.D("无权访问", "c:", curMenuName, ",c:", curMenuFuncName, ",t:", this.controllerName, ",t:", this.actionName)
+					}
+					fmt.Println(xrw)
+					this.Ctx.WriteString("无权访问无权访问")
+					this.StopRun()
+					return
+				}
 			}
 		}
 	}
@@ -165,8 +175,10 @@ func (this *CommonController) getClientIp() string {
 //渲染模版
 func (this *CommonController) display(tpl ...string) {
 	var tplname string
-	if len(tpl) > 0 {
+	if len(tpl) == 1 {
 		tplname = tpl[0] + ".html"
+	} else if len(tpl) == 2 {
+		tplname = tpl[0] + "/" + tpl[1] + ".html"
 	} else {
 		tplname = this.controllerName + "/" + this.actionName + ".html"
 	}

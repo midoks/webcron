@@ -26,7 +26,7 @@ func (this *AppServerController) Index() {
 	filters := make([]interface{}, 0)
 
 	if searchType != "" {
-		if strings.EqualFold(searchType, "msg") {
+		if strings.EqualFold(searchType, "desc") {
 			searchType2 := fmt.Sprintf("%s__icontains", searchType)
 			filters = append(filters, searchType2, searchWord)
 		} else {
@@ -34,7 +34,9 @@ func (this *AppServerController) Index() {
 		}
 	}
 
-	result, count := models.ItemGetList(page, this.pageSize, filters...)
+	result, count := models.ServerGetList(page, this.pageSize, filters...)
+
+	fmt.Println(result)
 
 	list := make([]map[string]interface{}, len(result))
 
@@ -56,7 +58,7 @@ func (this *AppServerController) Index() {
 	this.Data["search_type"] = searchType
 	this.Data["search_word"] = searchWord
 	this.Data["list"] = list
-	this.Data["pageLink"] = libs.NewPager(page, int(count), this.pageSize, beego.URLFor("SysUserController.Index"), true).ToString()
+	this.Data["pageLink"] = libs.NewPager(page, int(count), this.pageSize, beego.URLFor("AppServerController.Index"), true).ToString()
 	this.display()
 }
 
@@ -144,4 +146,8 @@ func (this *AppServerController) Del() {
 		}
 	}
 	this.retFail("非法参数")
+}
+
+func (this *AppServerController) Test() {
+	this.retFail("test")
 }
