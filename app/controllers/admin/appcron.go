@@ -34,7 +34,7 @@ func (this *AppCronController) Index() {
 		}
 	}
 
-	result, count := models.ItemGetList(page, this.pageSize, filters...)
+	result, count := models.CronGetList(page, this.pageSize, filters...)
 
 	list := make([]map[string]interface{}, len(result))
 
@@ -56,17 +56,17 @@ func (this *AppCronController) Index() {
 	this.Data["search_type"] = searchType
 	this.Data["search_word"] = searchWord
 	this.Data["list"] = list
-	this.Data["pageLink"] = libs.NewPager(page, int(count), this.pageSize, beego.URLFor("SysUserController.Index"), true).ToString()
+	this.Data["pageLink"] = libs.NewPager(page, int(count), this.pageSize, beego.URLFor("AppCronController.Index"), true).ToString()
 	this.display()
 }
 
 func (this *AppCronController) Add() {
 
-	data := new(models.AppItem)
+	data := new(models.AppCron)
 	id, err := this.GetInt("id")
 
 	if err == nil {
-		data, _ = models.ItemGetById(id)
+		data, _ = models.CronGetById(id)
 	}
 
 	if this.isPost() {
@@ -82,9 +82,9 @@ func (this *AppCronController) Add() {
 			data.UpdateTime = time.Now().Unix()
 			err := data.Update()
 			if err == nil {
-				msg := fmt.Sprintf("更新Item的ID:%d|%s", id, data)
+				msg := fmt.Sprintf("更新Cron的ID:%d|%s", id, data)
 				this.uLog(msg)
-				this.redirect(beego.URLFor("AppItemController.Index"))
+				this.redirect(beego.URLFor("AppCronController.Index"))
 			}
 		} else {
 
@@ -94,18 +94,15 @@ func (this *AppCronController) Add() {
 
 			id, err := orm.NewOrm().Insert(data)
 			if err == nil {
-				msg := fmt.Sprintf("添加Item的ID:%d", id)
+				msg := fmt.Sprintf("添加Cron的ID:%d", id)
 				this.uLog(msg)
-				this.redirect(beego.URLFor("AppItemController.Index"))
+				this.redirect(beego.URLFor("AppCronController.Index"))
 			}
 		}
 	}
 
 	this.Data["data"] = data
 	this.Data["id"] = this.GetString("id")
-
-	roleList, _ := models.RoleGetAll()
-	this.Data["roleList"] = roleList
 
 	this.display()
 }
@@ -114,14 +111,14 @@ func (this *AppCronController) Lock() {
 
 	id, err := this.GetInt("id")
 	if err == nil {
-		data, _ := models.ItemGetById(id)
+		data, _ := models.CronGetById(id)
 
 		if data.Status > 0 {
 			data.Status = -1
-			this.uLog("Item锁定成功")
+			this.uLog("Cron锁定成功")
 		} else {
 			data.Status = 1
-			this.uLog("Item解锁成功")
+			this.uLog("Cron解锁成功")
 		}
 		err = data.Update()
 
@@ -136,9 +133,9 @@ func (this *AppCronController) Del() {
 
 	id, err := this.GetInt("id")
 	if err == nil {
-		num, err := models.ItemDelById(id)
+		num, err := models.CronDelById(id)
 		if err == nil {
-			msg := fmt.Sprintf("删除item项目%s成功", num)
+			msg := fmt.Sprintf("删除Cron:%s,成功", num)
 			this.uLog(msg)
 			this.retOk(msg)
 		}

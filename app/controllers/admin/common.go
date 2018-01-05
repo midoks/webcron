@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	_ "fmt"
 	"github.com/astaxie/beego"
 	_ "github.com/astaxie/beego/logs"
 	"github.com/midoks/webcron/app/libs"
@@ -123,12 +123,8 @@ func (this *CommonController) auth() {
 					xrw := this.Ctx.Input.Header("X-Requested-With")
 					if strings.EqualFold(xrw, "XMLHttpRequest") {
 						this.retFail("无权访问")
-					} else {
-						this.display("layout", "nopower")
-						// fmt.Sprintf("", ...)
-						// this.dLog()
 					}
-					fmt.Println(xrw)
+
 					this.Ctx.WriteString("无权访问无权访问")
 					this.StopRun()
 					return

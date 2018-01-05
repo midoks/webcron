@@ -10,8 +10,12 @@ type AppCron struct {
 	Id         int
 	Name       string
 	Desc       string
-	Type       int
-	ServerId   string
+	CronSpec   string
+	Cmd        string
+	ExecNum    int
+	PrevTime   int
+	Notify     int
+	Timeout    int
 	Status     int
 	UpdateTime int64
 	CreateTime int64
@@ -29,17 +33,16 @@ func (u *AppCron) Update(fields ...string) error {
 	return nil
 }
 
-func CronGetList(page, pageSize int, filters ...interface{}) ([]*AppDebug, int64) {
+func CronGetList(page, pageSize int, filters ...interface{}) ([]*AppCron, int64) {
 	offset := (page - 1) * pageSize
 
-	list := make([]*AppDebug, 0)
+	list := make([]*AppCron, 0)
 
 	query := orm.NewOrm().QueryTable(TableName("cron"))
 
 	if len(filters) > 0 {
 		l := len(filters)
 		for k := 0; k < l; k += 2 {
-			// print(filters[k].(string), filters[k+1])
 			query = query.Filter(filters[k].(string), filters[k+1])
 		}
 	}
