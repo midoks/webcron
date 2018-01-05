@@ -1,6 +1,8 @@
 package controllers
 
-//import ()
+import (
+	_ "github.com/midoks/webcron/app/models"
+)
 
 type BaseController struct {
 	CommonController

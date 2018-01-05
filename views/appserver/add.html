@@ -4,16 +4,16 @@
         <form class="form-horizontal" method="post" role="form">
             <!-- #section:elements.form -->
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">项目名: </label>
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">IP: </label>
                 <div class="col-sm-9">
                     
-                    <input name="vars[name]" class="col-xs-8 col-sm-2" type="text" value="{{.data.Name}}" required>
+                    <input name="vars[ip]" class="col-xs-8 col-sm-2" type="text" value="{{.data.Ip}}" required>
                     
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">项目描述: </label>
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">描述: </label>
                 <div class="col-sm-9">
                     <input name="vars[desc]" class="col-xs-6 col-sm-2" type="text" required value="{{.data.Desc}}">
                     
@@ -27,13 +27,13 @@
                 <div class="col-sm-9">
 
                     <label class="inline">
-                        <input name="vars[type]" class="ace" type="radio" value="1" {{if eq 1 .data.Type}}checked{{end}}>
-                        <span class="lbl middle">本地</span>
+                        <input name="vars[type]" class="ace" type="radio" value="0" {{if eq 0 .data.Type}}checked{{end}}>
+                        <span class="lbl middle">用户和密码</span>
                     </label>
                     &nbsp; &nbsp; &nbsp;
                     <label class="inline">
-                        <input name="vars[type]" class="ace" type="radio"  value="0" {{if eq 0 .data.Type}}checked{{end}}>
-                        <span class="lbl middle">远程</span>
+                        <input name="vars[type]" class="ace" type="radio"  value="1" {{if eq 1 .data.Type}}checked{{end}}>
+                        <span class="lbl middle">公钥登录</span>
                     </label>
 
                 </div>

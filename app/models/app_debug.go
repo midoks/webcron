@@ -1,20 +1,16 @@
 package models
 
 import (
-	_ "fmt"
+	"fmt"
 	"github.com/astaxie/beego/orm"
 	"time"
 )
 
 type AppDebug struct {
-	Id         int
-	Name       string
-	Desc       string
-	Type       int
-	ServerId   string
-	Status     int
-	UpdateTime int64
-	CreateTime int64
+	Id      int
+	Type    int
+	Msg     string
+	AddTime int64
 }
 
 func (u *AppDebug) TableName() string {
@@ -22,7 +18,6 @@ func (u *AppDebug) TableName() string {
 }
 
 func (u *AppDebug) Update(fields ...string) error {
-	u.UpdateTime = time.Now().Unix()
 	if _, err := orm.NewOrm().Update(u, fields...); err != nil {
 		return err
 	}
@@ -34,12 +29,11 @@ func DebugGetList(page, pageSize int, filters ...interface{}) ([]*AppDebug, int6
 
 	list := make([]*AppDebug, 0)
 
-	query := orm.NewOrm().QueryTable(TableName("item"))
+	query := orm.NewOrm().QueryTable(TableName("debug"))
 
 	if len(filters) > 0 {
 		l := len(filters)
 		for k := 0; k < l; k += 2 {
-			// print(filters[k].(string), filters[k+1])
 			query = query.Filter(filters[k].(string), filters[k+1])
 		}
 	}
@@ -50,26 +44,15 @@ func DebugGetList(page, pageSize int, filters ...interface{}) ([]*AppDebug, int6
 	return list, total
 }
 
-func DebugGetById(id int) (*AppDebug, error) {
+func DebugAdd(utype int, msg string) {
+	var log AppDebug
 
-	u := new(AppDebug)
-	err := orm.NewOrm().QueryTable(TableName("item")).Filter("id", id).One(u)
-	if err != nil {
-		return nil, err
+	log.Type = utype
+	log.Msg = msg
+	log.AddTime = time.Now().Unix()
+
+	id, err := orm.NewOrm().Insert(&log)
+	if err == nil {
+		fmt.Println("AppDebug.DebugAdd:", id)
 	}
-	return u, nil
-}
-
-func DebugGetByName(name string) (*AppDebug, error) {
-
-	u := new(AppDebug)
-	err := orm.NewOrm().QueryTable(TableName("item")).Filter("name", name).One(u)
-	if err != nil {
-		return nil, err
-	}
-	return u, nil
-}
-
-func DebugDelById(id int) (int64, error) {
-	return orm.NewOrm().Delete(&AppDebug{Id: id})
 }

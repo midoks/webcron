@@ -45,8 +45,11 @@ func (this *AppServerController) Index() {
 		row := make(map[string]interface{})
 
 		row["Id"] = v.Id
-		row["Name"] = v.Name
 		row["Desc"] = v.Desc
+		row["Ip"] = v.Ip
+		row["Type"] = v.Type
+		row["User"] = v.User
+		row["Pwd"] = v.Pwd
 
 		row["Status"] = v.Status
 		row["UpdateTime"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
@@ -64,11 +67,11 @@ func (this *AppServerController) Index() {
 
 func (this *AppServerController) Add() {
 
-	data := new(models.AppItem)
+	data := new(models.AppServer)
 	id, err := this.GetInt("id")
 
 	if err == nil {
-		data, _ = models.ItemGetById(id)
+		data, _ = models.ServerGetById(id)
 	}
 
 	if this.isPost() {
@@ -76,17 +79,17 @@ func (this *AppServerController) Add() {
 		vars := make(map[string]string)
 		this.Ctx.Input.Bind(&vars, "vars")
 
-		data.Name = vars["name"]
 		data.Desc = vars["desc"]
+		data.Ip = vars["ip"]
 
 		if id > 0 {
 
 			data.UpdateTime = time.Now().Unix()
 			err := data.Update()
 			if err == nil {
-				msg := fmt.Sprintf("更新Item的ID:%d|%s", id, data)
+				msg := fmt.Sprintf("更新Server的ID:%d|%s", id, data)
 				this.uLog(msg)
-				this.redirect(beego.URLFor("AppItemController.Index"))
+				this.redirect(beego.URLFor("AppServerController.Index"))
 			}
 		} else {
 
@@ -96,9 +99,9 @@ func (this *AppServerController) Add() {
 
 			id, err := orm.NewOrm().Insert(data)
 			if err == nil {
-				msg := fmt.Sprintf("添加Item的ID:%d", id)
+				msg := fmt.Sprintf("添加Server的ID:%d", id)
 				this.uLog(msg)
-				this.redirect(beego.URLFor("AppItemController.Index"))
+				this.redirect(beego.URLFor("AppServerController.Index"))
 			}
 		}
 	}

@@ -33,6 +33,10 @@ func (this *CommonController) uLog(behavior string) {
 	models.LogAdd(this.user.Id, 1, behavior)
 }
 
+func (this *CommonController) dLog(behavior string) {
+	models.DebugAdd(1, behavior)
+}
+
 func (this *CommonController) D(args ...string) {
 	if beego.AppConfig.String("runmode") == "dev" {
 		for i := 0; i < len(args); i++ {
@@ -115,13 +119,14 @@ func (this *CommonController) auth() {
 
 				this.Data["menuNav"] = newMenuNav
 
-				if !isAuth {
+				if !isAuth && this.controllerName != "login" && this.controllerName != "index" {
 					xrw := this.Ctx.Input.Header("X-Requested-With")
 					if strings.EqualFold(xrw, "XMLHttpRequest") {
 						this.retFail("无权访问")
 					} else {
 						this.display("layout", "nopower")
-						this.D("无权访问", "c:", curMenuName, ",c:", curMenuFuncName, ",t:", this.controllerName, ",t:", this.actionName)
+						// fmt.Sprintf("", ...)
+						// this.dLog()
 					}
 					fmt.Println(xrw)
 					this.Ctx.WriteString("无权访问无权访问")

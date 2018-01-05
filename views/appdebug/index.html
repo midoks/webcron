@@ -6,7 +6,9 @@
                 <tr>
                     <td class="col-xs-3 col-sm-1">
                         <select id="search_type" name="search_type">
-                            <option value="id" {{if eq "id" .search_type}}selected="selected"{{end}}>项目ID</option>
+                            <option value="id" {{if eq "id" .search_type}}selected="selected"{{end}}>序号</option>
+                            <option value="type" {{if eq "type" .search_type}}selected="selected"{{end}}>类型</option>
+                            <option value="msg" {{if eq "msg" .search_type}}selected="selected"{{end}}>内容</option>
                         </select>
                     </td>
 
@@ -33,56 +35,19 @@
                 <thead>
                 <tr>
                     <th class="col-sm-1">序号</th>
-                    <th class="col-sm-1">项目名</th>
-                    <th class="col-sm-1">项目描述</th>
-                    <th class="col-sm-2">更新时间</th>
+                    <th class="col-sm-1">类型</th>
+                    <th class="col-sm-1">内容</th>
                     <th class="col-sm-2">创建时间</th>
-                    <th style="width: 80px;">状态</th>
-                    <th>
-                        <a class="blue" title="新增项目" href="/{{.curController}}/add">
-                            <i class="glyphicon glyphicon-plus bigger-130"></i>
-                        </a>
-                    </th>
                 </tr>
                 </thead>
-
 
                 <tbody>
                     {{range  $k, $v := .list}}
                     <tr>
                         <td>{{$v.Id}}</td>
-                        <td>{{$v.Name}}</td>
-                        <td>{{$v.Desc}}</td>
-                        <td>{{$v.UpdateTime}}</td>
-                        <td>{{$v.CreateTime}}</td>
-                        <td>
-                            {{if eq 1 $v.Status}}
-                            <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{$v.Id}}')">
-                                <span title="点击锁定" class="badge badge-warning">正常</span></a>
-                            {{else}}
-                            <a class="blue" href="javascript:req('/{{$.curController}}/lock?id={{$v.Id}}')">
-                                <span title="点击解锁" class="badge">锁定</span></a>
-                            {{end}}
-                        </td>
-                        <td>
-                            <div class="visible-md visible-lg action-buttons">
-                                <a class="blue" title="编辑" href="/{{$.curController}}/add?id={{$v.Id}}">
-                                    <i class="fa fa-pencil bigger-130"></i>
-                                </a>
-                                {{if eq 1 $v.Status}} 
-                                <a class="blue" title="点击锁定" href="javascript:req('/{{$.curController}}/lock?id={{$v.Id}}')">
-                                    <i class="fa fa-unlock bigger-130"></i>
-                                </a> 
-                                {{else}} 
-                                <a class="blue" title="点击解锁" href="javascript:req('/{{$.curController}}/lock?id={{$v.Id}}')">
-                                <i class=" fa fa-lock bigger-130"></i>
-                                </a> 
-                                {{end}}
-                                <a class="blue" title="删除"
-                                   href="javascript:req('/{{$.curController}}/del?id={{$v.Id}}')">
-                                    <i class="fa fa-trash-o bigger-130"></i>
-                                </a>
-                        </td>
+                        <td>{{$v.Type}}</td>
+                        <td>{{$v.Msg}}</td>
+                        <td>{{$v.AddTime}}</td>
                     </tr>
                     {{end}}
                 </tbody>

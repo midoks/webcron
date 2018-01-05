@@ -33,8 +33,10 @@
                 <thead>
                 <tr>
                     <th class="col-sm-1">序号</th>
-                    <th class="col-sm-1">名称</th>
+                    <th class="col-sm-1">IP</th>
                     <th class="col-sm-1">描述</th>
+                    <th class="col-sm-1">类型</th>
+                    <th class="col-sm-1">登录名</th>
                     <th class="col-sm-2">更新时间</th>
                     <th class="col-sm-2">创建时间</th>
                     <th style="width: 80px;">状态</th>
@@ -51,8 +53,10 @@
                     {{range  $k, $v := .list}}
                     <tr>
                         <td>{{$v.Id}}</td>
-                        <td>{{$v.Name}}</td>
+                        <td>{{$v.Ip}}</td>
                         <td>{{$v.Desc}}</td>
+                        <td>{{$v.Type}}</td>
+                        <td>{{$v.User}}</td>
                         <td>{{$v.UpdateTime}}</td>
                         <td>{{$v.CreateTime}}</td>
                         <td>

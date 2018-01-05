@@ -8,10 +8,9 @@ import (
 
 type AppServer struct {
 	Id         int
-	Name       string
+	Ip         string
 	Desc       string
 	Type       int
-	Ip         string
 	User       string
 	Pwd        string
 	PubKey     string
