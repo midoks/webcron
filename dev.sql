@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: 2018-01-04 13:06:55
+-- Generation Time: 2018-01-05 18:43:23
 -- 服务器版本： 5.6.24
 -- PHP Version: 5.5.29
 
@@ -44,9 +44,9 @@ CREATE TABLE IF NOT EXISTS `app_auth` (
 DROP TABLE IF EXISTS `app_cron`;
 CREATE TABLE IF NOT EXISTS `app_cron` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `item_id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(50) NOT NULL DEFAULT '0',
   `desc` varchar(50) NOT NULL DEFAULT '0',
+  `item_id` int(11) NOT NULL DEFAULT '0',
   `cron_spec` varchar(100) NOT NULL DEFAULT '0',
   `cmd` text NOT NULL,
   `exec_num` int(11) NOT NULL DEFAULT '0',
@@ -57,22 +57,45 @@ CREATE TABLE IF NOT EXISTS `app_cron` (
   `update_time` int(11) NOT NULL DEFAULT '0',
   `create_time` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='运行任务' AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='运行任务' AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `app_cron`
+--
+
+INSERT INTO `app_cron` (`id`, `name`, `desc`, `item_id`, `cron_spec`, `cmd`, `exec_num`, `prev_time`, `notify`, `timeout`, `status`, `update_time`, `create_time`) VALUES
+(1, '11', '0', 0, '0', '1', 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `app_debugs`
+-- 表的结构 `app_debug`
 --
 
-DROP TABLE IF EXISTS `app_debugs`;
-CREATE TABLE IF NOT EXISTS `app_debugs` (
+DROP TABLE IF EXISTS `app_debug`;
+CREATE TABLE IF NOT EXISTS `app_debug` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL,
   `msg` text NOT NULL,
   `add_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=11 ;
+
+--
+-- 转存表中的数据 `app_debug`
+--
+
+INSERT INTO `app_debug` (`id`, `type`, `msg`, `add_time`) VALUES
+(1, 1, '1', 1),
+(2, 12, '12123', 1),
+(3, 1, 'test', 1515134480),
+(4, 1, 'test', 1515134481),
+(5, 1, 'test', 1515134481),
+(6, 1, 'test', 1515134482),
+(7, 1, 'test', 1515134483),
+(8, 1, 'test', 1515134483),
+(9, 1, 'test', 1515134485),
+(10, 1, 'test', 1515134501);
 
 -- --------------------------------------------------------
 
@@ -98,8 +121,9 @@ CREATE TABLE IF NOT EXISTS `app_item` (
 --
 
 INSERT INTO `app_item` (`id`, `name`, `desc`, `type`, `server_id`, `status`, `update_time`, `create_time`) VALUES
-(1, '10', '1', 1, '0', 1, 1515035172, 0),
-(2, '11', '11', 0, '', 0, 1515036059, 1515035827);
+(2, '11', '11', 0, '', 0, 1515036059, 1515035827),
+(3, 'asdf', 'adasdf', 0, '', -1, 1515064032, 1515035843),
+(4, 'asd', 'dd', 0, '', -1, 1515063919, 1515035914);
 
 -- --------------------------------------------------------
 
@@ -109,19 +133,25 @@ INSERT INTO `app_item` (`id`, `name`, `desc`, `type`, `server_id`, `status`, `up
 
 DROP TABLE IF EXISTS `app_server`;
 CREATE TABLE IF NOT EXISTS `app_server` (
-  `id`  int(11) NOT NULL AUTO_INCREMENT ,
-  `name`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' ,
-  `desc`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
-  `ip`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' ,
-  `type`  tinyint(4) NULL DEFAULT NULL ,
-  `user`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' ,
-  `pwd`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' ,
-  `pub_key`  text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-  `status`  tinyint(4) NOT NULL ,
-  `update_time`  int(11) NOT NULL DEFAULT 0 ,
-  `create_time`  int(11) NOT NULL DEFAULT 0 ,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(50) NOT NULL DEFAULT '0',
+  `type` tinyint(4) DEFAULT NULL,
+  `desc` varchar(255) DEFAULT NULL,
+  `user` varchar(50) NOT NULL DEFAULT '0',
+  `pwd` varchar(50) NOT NULL DEFAULT '0',
+  `pub_key` text NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  `create_time` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='服务器管理' AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='服务器管理' AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `app_server`
+--
+
+INSERT INTO `app_server` (`id`, `ip`, `type`, `desc`, `user`, `pwd`, `pub_key`, `status`, `update_time`, `create_time`) VALUES
+(1, '127.0.0.1', 1, '测试服务器1', 'www', '0', '1', 1, 1515129730, 0);
 
 -- --------------------------------------------------------
 
@@ -196,7 +226,9 @@ CREATE TABLE IF NOT EXISTS `sys_logs` (
   `msg` text NOT NULL,
   `add_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- 表的结构 `sys_role`
