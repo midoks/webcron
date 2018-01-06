@@ -7,6 +7,7 @@
                     <td class="col-xs-3 col-sm-1">
                         <select id="search_type" name="search_type">
                             <option value="id" {{if eq "id" .search_type}}selected="selected"{{end}}>项目ID</option>
+                            <option value="name" {{if eq "name" .search_type}}selected="selected"{{end}}>任务名称</option>
                         </select>
                     </td>
 
@@ -33,8 +34,7 @@
                 <thead>
                 <tr>
                     <th class="col-sm-1">序号</th>
-                    <th class="col-sm-1">项目名</th>
-                    <th class="col-sm-1">项目描述</th>
+                    <th class="col-sm-1">任务名称</th>
                     <th class="col-sm-2">更新时间</th>
                     <th class="col-sm-2">创建时间</th>
                     <th style="width: 80px;">状态</th>
@@ -52,7 +52,6 @@
                     <tr>
                         <td>{{$v.Id}}</td>
                         <td>{{$v.Name}}</td>
-                        <td>{{$v.Desc}}</td>
                         <td>{{$v.UpdateTime}}</td>
                         <td>{{$v.CreateTime}}</td>
                         <td>

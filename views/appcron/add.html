@@ -4,7 +4,7 @@
         <form class="form-horizontal" method="post" role="form">
             <!-- #section:elements.form -->
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">计划名称: </label>
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">任务名称: </label>
                 <div class="col-sm-9">
                     
                     <input name="vars[name]" class="col-xs-8 col-sm-2" type="text" value="{{.data.Name}}" required>
@@ -12,27 +12,85 @@
                 </div>
             </div>
 
+
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">任务描述: </label>
+                <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">
+                    任务说明: 
+                </label>
                 <div class="col-sm-9">
-                    <input name="vars[desc]" class="col-xs-6 col-sm-2" type="text" required value="{{.data.Desc}}">
+                    <textarea class="col-sm-6" name="vars[desc]" rows="5">{{.row.Desc}}</textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">是否只允许一个实例: </label>
+
+                <div class="col-sm-9">
+
+                    <label class="inline">
+                        <input name="vars[timeout]" class="ace" type="radio" value="0" {{if eq 0 .data.Timeout}}checked{{end}}>
+                        <span class="lbl middle">是</span>
+                    </label>
+                    &nbsp; &nbsp; &nbsp;
+                    <label class="inline">
+                        <input name="vars[timeout]" class="ace" type="radio"  value="1" {{if eq 1 .data.Timeout}}checked{{end}}>
+                        <span class="lbl middle">否</span>
+                    </label>
                     
                 </div>
             </div>
 
-            <div class="space-4"></div>
 
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">类型: </label>
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">cron表达式: </label>
                 <div class="col-sm-9">
+                    <input name="vars[cron_spec]" class="col-xs-8 col-sm-6" type="text" value="{{.data.CronSpec}}" required>   
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">
+                    命令脚本: 
+                </label>
+
+                <div class="col-sm-9">
+                    <textarea class="col-sm-6" name="vars[desc]" rows="5">{{.row.Cmd}}</textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">超时时间: </label>
+                <div class="col-sm-9">
+                    <input name="vars[timeout]" class="col-xs-2 col-sm-2" type="text" value="{{.data.Timeout}}" required>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">邮件通知: </label>
+                <div class="col-sm-9">
+                    
+                    <label class="inline">
+                        <input name="vars[Notify]" class="ace" type="radio" value="0" {{if eq 0 .data.Notify}}checked{{end}}>
+                        <span class="lbl middle">不通知</span>
+                    </label>
+                    &nbsp; &nbsp; &nbsp;
+                    <label class="inline">
+                        <input name="vars[Notify]" class="ace" type="radio"  value="1" {{if eq 1 .data.Notify}}checked{{end}}>
+                        <span class="lbl middle">执行失败时通知</span>
+                    </label>
+
+                    &nbsp; &nbsp; &nbsp;
+                    <label class="inline">
+                        <input name="vars[Notify]" class="ace" type="radio"  value="1" {{if eq 1 .data.Notify}}checked{{end}}>
+                        <span class="lbl middle">执行结束时通知</span>
+                    </label>
 
                 </div>
             </div>
 
 
-
             <div class="space-4"></div>
-            
             <input name="id" type="hidden" value="{{.id}}">
 
             <div class="clearfix form-actions">

@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/midoks/webcron/app/libs"
 	"github.com/midoks/webcron/app/models"
-	_ "strconv"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -81,6 +81,10 @@ func (this *AppServerController) Add() {
 
 		data.Desc = vars["desc"]
 		data.Ip = vars["ip"]
+		data.Type ,_ =  strconv.Atoi(vars["type"])
+		data.User = vars["user"]
+		data.Pwd = vars["pwd"]
+		data.PubKey = vars["pub_key"]
 
 		if id > 0 {
 

@@ -26,7 +26,7 @@ func (this *AppCronController) Index() {
 	filters := make([]interface{}, 0)
 
 	if searchType != "" {
-		if strings.EqualFold(searchType, "msg") {
+		if strings.EqualFold(searchType, "name") {
 			searchType2 := fmt.Sprintf("%s__icontains", searchType)
 			filters = append(filters, searchType2, searchWord)
 		} else {
@@ -44,7 +44,6 @@ func (this *AppCronController) Index() {
 
 		row["Id"] = v.Id
 		row["Name"] = v.Name
-		row["Desc"] = v.Desc
 
 		row["Status"] = v.Status
 		row["UpdateTime"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
@@ -75,7 +74,6 @@ func (this *AppCronController) Add() {
 		this.Ctx.Input.Bind(&vars, "vars")
 
 		data.Name = vars["name"]
-		data.Desc = vars["desc"]
 
 		if id > 0 {
 

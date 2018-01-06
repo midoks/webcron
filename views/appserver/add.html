@@ -7,7 +7,7 @@
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1">IP: </label>
                 <div class="col-sm-9">
                     
-                    <input name="vars[ip]" class="col-xs-8 col-sm-2" type="text" value="{{.data.Ip}}" required>
+                    <input name="vars[ip]" class="col-xs-8 col-sm-3" type="text" value="{{.data.Ip}}" required>
                     
                 </div>
             </div>
@@ -15,7 +15,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1">描述: </label>
                 <div class="col-sm-9">
-                    <input name="vars[desc]" class="col-xs-6 col-sm-2" type="text" required value="{{.data.Desc}}">
+                    <input name="vars[desc]" class="col-xs-6 col-sm-3" type="text" required value="{{.data.Desc}}">
                     
                 </div>
             </div>
@@ -38,6 +38,32 @@
 
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">登录名: </label>
+                <div class="col-sm-9">
+                    <input name="vars[user]" class="col-xs-6 col-sm-3" type="text" required value="{{.data.User}}">   
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">密码: </label>
+                <div class="col-sm-9">
+                    <input name="vars[pwd]" class="col-xs-6 col-sm-3" type="text" required value="{{.data.Pwd}}"> 
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 公钥: </label>
+
+                <div class="col-sm-9">
+                    <textarea class="col-sm-5" name="vars[pub_key]">{{.data.PubKey}}</textarea>
+                </div>
+            </div>
+
+            <div class="space-4"></div>
+
+
 
 
 
