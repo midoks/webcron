@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/midoks/webcron/app/libs"
 	"github.com/midoks/webcron/app/models"
-	_ "strconv"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -74,6 +74,11 @@ func (this *AppCronController) Add() {
 		this.Ctx.Input.Bind(&vars, "vars")
 
 		data.Name = vars["name"]
+		data.Desc = vars["desc"]
+		data.CronSpec = vars["cron_spec"]
+		data.Cmd = vars["cmd"]
+		data.Timeout, _ = strconv.Atoi(vars["type"])
+		data.Notify, _ = strconv.Atoi(vars["notify"])
 
 		if id > 0 {
 
