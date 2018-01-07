@@ -27,12 +27,12 @@
                 <div class="col-sm-9">
 
                     <label class="inline">
-                        <input name="vars[timeout]" class="ace" type="radio" value="0" {{if eq 0 .data.Timeout}}checked{{end}}>
+                        <input name="vars[concurrent]" class="ace" type="radio" value="0" {{if eq 0 .data.Concurrent}}checked{{end}}>
                         <span class="lbl middle">是</span>
                     </label>
                     &nbsp; &nbsp; &nbsp;
                     <label class="inline">
-                        <input name="vars[timeout]" class="ace" type="radio"  value="1" {{if eq 1 .data.Timeout}}checked{{end}}>
+                        <input name="vars[concurrent]" class="ace" type="radio"  value="1" {{if eq 1 .data.Concurrent}}checked{{end}}>
                         <span class="lbl middle">否</span>
                     </label>
                     
@@ -68,15 +68,15 @@
                 <div class="col-sm-9">
                     
                     <label class="inline">
-                        <input name="vars[Notify]" class="ace" type="radio" value="0" {{if eq 0 .data.Notify}}checked{{end}}>
+                        <input name="vars[notify]" class="ace" type="radio" value="0" {{if eq 0 .data.Notify}}checked{{end}}>
                         <span class="lbl middle">不通知</span>
                     </label>&nbsp;
                     <label class="inline">
-                        <input name="vars[Notify]" class="ace" type="radio"  value="1" {{if eq 1 .data.Notify}}checked{{end}}>
+                        <input name="vars[notify]" class="ace" type="radio"  value="1" {{if eq 1 .data.Notify}}checked{{end}}>
                         <span class="lbl middle">执行失败时通知</span>
                     </label>&nbsp;
                     <label class="inline">
-                        <input name="vars[Notify]" class="ace" type="radio"  value="2" {{if eq 2 .data.Notify}}checked{{end}}>
+                        <input name="vars[notify]" class="ace" type="radio"  value="2" {{if eq 2 .data.Notify}}checked{{end}}>
                         <span class="lbl middle">执行结束时通知</span>
                     </label>
 

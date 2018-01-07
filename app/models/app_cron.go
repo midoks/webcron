@@ -12,6 +12,7 @@ type AppCron struct {
 	Desc       string
 	CronSpec   string
 	Cmd        string
+	Concurrent int
 	ExecNum    int
 	PrevTime   int
 	Notify     int
