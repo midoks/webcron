@@ -34,6 +34,7 @@
                 <tr>
                     <th class="col-sm-1">序号</th>
                     <th class="col-sm-1">IP</th>
+                    <th class="col-sm-1">端口</th>
                     <th class="col-sm-1">描述</th>
                     <th class="col-sm-1">类型</th>
                     <th class="col-sm-1">登录名</th>
@@ -54,8 +55,9 @@
                     <tr>
                         <td>{{$v.Id}}</td>
                         <td>{{$v.Ip}}</td>
+                        <td>{{$v.Port}}</td>
                         <td>{{$v.Desc}}</td>
-                        <td>{{$v.Type}}</td>
+                        <td>{{if eq 0 $v.Type}}用户和密码{{else if eq 1 $v.Type}}公钥登录{{end}}</td>
                         <td>{{$v.User}}</td>
                         <td>{{$v.UpdateTime}}</td>
                         <td>{{$v.CreateTime}}</td>

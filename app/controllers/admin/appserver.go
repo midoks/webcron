@@ -35,9 +35,6 @@ func (this *AppServerController) Index() {
 	}
 
 	result, count := models.ServerGetList(page, this.pageSize, filters...)
-
-	fmt.Println(result)
-
 	list := make([]map[string]interface{}, len(result))
 
 	for k, v := range result {
@@ -47,6 +44,7 @@ func (this *AppServerController) Index() {
 		row["Id"] = v.Id
 		row["Desc"] = v.Desc
 		row["Ip"] = v.Ip
+		row["Port"] = v.Port
 		row["Type"] = v.Type
 		row["User"] = v.User
 		row["Pwd"] = v.Pwd
@@ -65,6 +63,47 @@ func (this *AppServerController) Index() {
 	this.display()
 }
 
+func (this *AppServerController) SearchAjax() {
+	page := 1
+	filters := make([]interface{}, 0)
+
+	qstr := this.GetString("q")
+	if qstr == "" {
+		//this.retFail("搜索词不能为空")
+	} else {
+		q, err := strconv.Atoi(qstr)
+		filters = append(filters, "status", 1)
+		if err == nil {
+			filters = append(filters, "id", q)
+		} else {
+			filters = append(filters, "desc__icontains", qstr)
+		}
+	}
+
+	result, _ := models.ServerGetList(page, this.pageSize, filters...)
+	list := make([]map[string]interface{}, len(result))
+
+	for k, v := range result {
+
+		row := make(map[string]interface{})
+
+		row["Id"] = v.Id
+		row["Desc"] = v.Desc
+		row["Ip"] = v.Ip
+		row["Port"] = v.Port
+		row["Type"] = v.Type
+		row["User"] = v.User
+		row["Pwd"] = v.Pwd
+
+		row["Status"] = v.Status
+		row["UpdateTime"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
+		row["CreateTime"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
+
+		list[k] = row
+	}
+	this.retOk("ok", list)
+}
+
 func (this *AppServerController) Add() {
 
 	data := new(models.AppServer)
@@ -81,7 +120,9 @@ func (this *AppServerController) Add() {
 
 		data.Desc = vars["desc"]
 		data.Ip = vars["ip"]
+		data.Port, _ = strconv.Atoi(vars["port"])
 		data.Type, _ = strconv.Atoi(vars["type"])
+
 		data.User = vars["user"]
 		data.Pwd = vars["pwd"]
 		data.PubKey = vars["pub_key"]

@@ -167,6 +167,15 @@ function show_add_item(obj){
         } 
     }
 
+    pro_search("", function(data){
+        for(var i in data){
+            console.log(i)
+            var tmp =  '<tr><td>'+ data[i]['Id'] + '</td><td>'
+            + data[i]['Name'] +'</td><td><a href="javascript:void(0);" onclick="add_pro_func(this);"><i class="glyphicon glyphicon-plus bigger-130"></i><a></td></tr>';
+            $('#add_item_id_tab tbody').append(tmp);
+        }
+    });
+
     var dialog = $( "#add_item_id" ).removeClass('hide').dialog({
         width: 600,
         height:700,
@@ -213,7 +222,7 @@ function item_seacrch(){
     } 
 
     pro_search(search_val, function(data){
-        console.log(data);
+        //console.log(data);
 
         $('#add_item_id_tab tbody').html('');
         for(var i in data){

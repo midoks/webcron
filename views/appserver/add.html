@@ -5,10 +5,15 @@
             <!-- #section:elements.form -->
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1">IP: </label>
-                <div class="col-sm-9">
-                    
+                <div class="col-sm-9"> 
                     <input name="vars[ip]" class="col-xs-8 col-sm-3" type="text" value="{{.data.Ip}}" required>
-                    
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Port: </label>
+                <div class="col-sm-9"> 
+                    <input name="vars[port]" class="col-xs-8 col-sm-3" type="text" value="{{if eq 0 .data.Port}}22{{else}}{{.data.Port}}{{end}}" required>
                 </div>
             </div>
 

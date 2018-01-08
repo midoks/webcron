@@ -9,6 +9,7 @@ import (
 type AppServer struct {
 	Id         int
 	Ip         string
+	Port       int
 	Desc       string
 	Type       int
 	User       string

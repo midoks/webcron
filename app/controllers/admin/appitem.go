@@ -66,7 +66,7 @@ func (this *AppItemController) SearchAjax() {
 
 	qstr := this.GetString("q")
 	if qstr == "" {
-		this.retFail("搜索词不能为空")
+		//this.retFail("搜索词不能为空")
 	} else {
 		q, err := strconv.Atoi(qstr)
 		filters = append(filters, "status", 1)
