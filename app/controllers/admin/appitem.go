@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/midoks/webcron/app/libs"
 	"github.com/midoks/webcron/app/models"
-	_ "strconv"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -58,6 +58,42 @@ func (this *AppItemController) Index() {
 	this.Data["list"] = list
 	this.Data["pageLink"] = libs.NewPager(page, int(count), this.pageSize, beego.URLFor("SysUserController.Index"), true).ToString()
 	this.display()
+}
+
+func (this *AppItemController) SearchAjax() {
+	page := 1
+	filters := make([]interface{}, 0)
+
+	qstr := this.GetString("q")
+	if qstr == "" {
+		this.retFail("搜索词不能为空")
+	} else {
+		q, err := strconv.Atoi(qstr)
+		filters = append(filters, "status", 1)
+		if err == nil {
+			filters = append(filters, "id", q)
+		} else {
+			filters = append(filters, "name__icontains", qstr)
+		}
+	}
+
+	result, _ := models.ItemGetList(page, this.pageSize, filters...)
+	list := make([]map[string]interface{}, len(result))
+	for k, v := range result {
+
+		row := make(map[string]interface{})
+
+		row["Id"] = v.Id
+		row["Name"] = v.Name
+		row["Desc"] = v.Desc
+
+		row["Status"] = v.Status
+		row["UpdateTime"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
+		row["CreateTime"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
+
+		list[k] = row
+	}
+	this.retOk("ok", list)
 }
 
 func (this *AppItemController) Add() {

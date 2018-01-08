@@ -81,7 +81,7 @@ func (this *AppServerController) Add() {
 
 		data.Desc = vars["desc"]
 		data.Ip = vars["ip"]
-		data.Type ,_ =  strconv.Atoi(vars["type"])
+		data.Type, _ = strconv.Atoi(vars["type"])
 		data.User = vars["user"]
 		data.Pwd = vars["pwd"]
 		data.PubKey = vars["pub_key"]
@@ -91,7 +91,7 @@ func (this *AppServerController) Add() {
 			data.UpdateTime = time.Now().Unix()
 			err := data.Update()
 			if err == nil {
-				msg := fmt.Sprintf("更新Server的ID:%d|%s", id, data)
+				msg := fmt.Sprintf("更新Server服务器的ID:%d|%s", id, data)
 				this.uLog(msg)
 				this.redirect(beego.URLFor("AppServerController.Index"))
 			}
@@ -103,7 +103,7 @@ func (this *AppServerController) Add() {
 
 			id, err := orm.NewOrm().Insert(data)
 			if err == nil {
-				msg := fmt.Sprintf("添加Server的ID:%d", id)
+				msg := fmt.Sprintf("添加Server服务器的ID:%d", id)
 				this.uLog(msg)
 				this.redirect(beego.URLFor("AppServerController.Index"))
 			}
@@ -123,14 +123,14 @@ func (this *AppServerController) Lock() {
 
 	id, err := this.GetInt("id")
 	if err == nil {
-		data, _ := models.ItemGetById(id)
+		data, _ := models.ServerGetById(id)
 
 		if data.Status > 0 {
 			data.Status = -1
-			this.uLog("Item锁定成功")
+			this.uLog("Server服务器成功")
 		} else {
 			data.Status = 1
-			this.uLog("Item解锁成功")
+			this.uLog("Server服务器成功")
 		}
 		err = data.Update()
 
@@ -145,16 +145,12 @@ func (this *AppServerController) Del() {
 
 	id, err := this.GetInt("id")
 	if err == nil {
-		num, err := models.ItemDelById(id)
+		num, err := models.ServerDelById(id)
 		if err == nil {
-			msg := fmt.Sprintf("删除item项目%s成功", num)
+			msg := fmt.Sprintf("删除Server服务器%s成功", num)
 			this.uLog(msg)
 			this.retOk(msg)
 		}
 	}
 	this.retFail("非法参数")
-}
-
-func (this *AppServerController) Test() {
-	this.retFail("test")
 }

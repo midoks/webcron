@@ -79,7 +79,7 @@ func (this *AppCronController) Add() {
 		data.Cmd = vars["cmd"]
 		data.Timeout, _ = strconv.Atoi(vars["timeout"])
 		data.Notify, _ = strconv.Atoi(vars["notify"])
-
+		data.ItemId, _ = strconv.Atoi(vars["item_id"])
 
 		if id > 0 {
 

@@ -10,6 +10,7 @@ type AppCron struct {
 	Id         int
 	Name       string
 	Desc       string
+	ItemId     int
 	CronSpec   string
 	Cmd        string
 	Concurrent int

@@ -16,7 +16,16 @@
                     任务说明: 
                 </label>
                 <div class="col-sm-9">
-                    <textarea class="col-sm-6" name="vars[desc]" rows="5">{{.data.Desc}}</textarea>
+                    <textarea class="col-sm-6" name="vars[desc]" rows="5" required>{{.data.Desc}}</textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">
+                    项目ID:
+                </label>
+                <div class="col-sm-9">
+                    <input id="show_add_item_id" class="col-xs-8 col-sm-2" type="text" name="vars[item_id]" value="{{.data.ItemId}}" onclick="show_add_item(this);"  required>
                 </div>
             </div>
 
@@ -101,8 +110,180 @@
         </form>
     </div><!-- /.col -->
 </div>
-<script>
-jQuery(function($) {
 
+<!-- 添加产品弹出页 start -->
+<div id="add_item_id" class="hide">
+    
+    <div class="row">
+        <div id="add_item_id_list" class="tags" style="border:none;">
+            <span class="tag">495590<button type="button" class="close">×</button></span>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div>
+            <input id="add_item_seacrch" type="text" name="search_info" placeholder="查询项目ID或项目名称">
+            <input onclick="item_seacrch();" type="button" name="search" value="查询" class="btn btn-purple btn-sm">
+        </div>
+
+        <div class="space-4"></div>
+        <div>
+            <table class="table table-bordered table-hover" id='add_item_id_tab'>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>产品名</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>489612</td>
+                        <td>裸色风暴眼影盘</td>
+                        <td><a href="#"><i class="glyphicon glyphicon-plus bigger-130"></i><a></td>
+                    </tr>
+                </tbody> 
+            </table>
+        </div>
+    </div>
+</div>
+<!-- 添加产品弹出页 end -->
+
+<script>
+
+//添加产品js start
+function show_add_item(obj){
+    var _this = $(obj);
+    var content = $(obj).val();
+
+    //console.log(content);
+    $('#add_item_id_list').html('');
+    $('#add_item_id_tab tbody').html('');
+    if (content != ''){
+        var list_kw = content.split(",");
+        for (i=0; i<list_kw.length ; i++ ){
+            var tmp = '<span class="tag"><span>'+list_kw[i]+'</span><button type="button" class="close" onclick="item_id_close(this);">×</button></span>';
+            $('#add_item_id_list').append(tmp);
+        } 
+    }
+
+    var dialog = $( "#add_item_id" ).removeClass('hide').dialog({
+        width: 600,
+        height:700,
+        modal: true,
+        title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-check'></i>产品添加</h4></div>",
+        title_html: true,
+        buttons: [
+            {
+                text: "OK",
+                "class" : "btn btn-primary btn-minier",
+                click: function() {
+                    $(this).dialog("close");
+                } 
+            }
+        ],
+    });
+}
+
+function item_id_close(obj){
+    var content = $('#show_add_item_id').val();
+    var own_pro_id = $(obj).prev().text();
+
+    var list_kw = content.split(",");
+    var list_new = [];
+    for (i=0; i<list_kw.length ; i++){
+        if (list_kw[i] == own_pro_id){
+        } else {
+            list_new.push(list_kw[i]);
+        }
+    }
+
+    var content_new = list_new.join(',');
+    $('#show_add_item_id').val(content_new);
+    $(obj).parent().remove();
+}
+
+
+function item_seacrch(){
+
+    var search_val = $('#add_item_seacrch').val();
+    if (search_val == ""){
+        alert('搜索词不能为空!!!');
+        return;
+    } 
+
+    pro_search(search_val, function(data){
+        console.log(data);
+
+        $('#add_item_id_tab tbody').html('');
+        for(var i in data){
+            console.log(i)
+            var tmp =  '<tr><td>'+ data[i]['Id'] + '</td><td>'
+            + data[i]['Name'] +'</td><td><a href="javascript:void(0);" onclick="add_pro_func(this);"><i class="glyphicon glyphicon-plus bigger-130"></i><a></td></tr>';
+            $('#add_item_id_tab tbody').append(tmp);
+        }
+    });
+}
+
+//产品搜索 start
+function pro_search(keyword, callback){
+ 
+    $.ajax({
+        url: '/appitem/searchajax?q='+ keyword,
+        type: 'GET',
+        dataType: 'JSON',
+    })
+    .done(function(data) {
+        if (data['code'] == 0){
+            //console.log(data);
+            callback(data['data'][0]);
+        } else {
+            alert(data['msg']);
+        }
+    })
+    .fail(function() {
+        console.log("error");
+    })
+    .always(function() {
+        console.log("complete");
+    });
+}
+
+function add_pro_id(id){
+    
+    var content = $('#show_add_item_id').val();
+   
+    var list_kw = [];
+    if (content != ''){
+        var list_kw = content.split(",");
+         if (list_kw.length > 0) {
+            alert("一个计划任务只能属于一个项目!!!");
+            return;
+        }
+    }
+    var tmp = '<span class="tag"><span>'+id+'</span><button type="button" class="close" onclick="item_id_close(this);">×</button></span>';
+     $('#add_item_id_list').append(tmp);
+    
+    list_kw.push(id);
+    var content_new = list_kw.join(',');
+    $('#show_add_item_id').val(content_new);
+
+}
+//添加产品
+function add_pro_func(obj){
+
+    var content = $('#show_add_item_id').val();
+
+    console.log(content);
+
+
+    var td_list = $(obj).parent().parent().find('td');
+    var pro_id = $(td_list[0]).text();
+    add_pro_id(pro_id);
+}
+//产品搜索 end
+
+
+jQuery(function($) {
 })
 </script>
