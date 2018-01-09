@@ -11,7 +11,7 @@ type AppItem struct {
 	Name       string
 	Desc       string
 	Type       int
-	ServerId   string
+	ServerId   int
 	Status     int
 	UpdateTime int64
 	CreateTime int64

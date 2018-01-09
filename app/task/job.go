@@ -7,9 +7,9 @@ import (
 	"github.com/midoks/webcron/app/models"
 	"golang.org/x/crypto/ssh"
 	// "io/ioutil"
-	// "log"
+	"log"
 	"net"
-	// "os"
+	"os"
 	"os/exec"
 	"runtime"
 	"time"
@@ -85,7 +85,23 @@ func ConnectByRsa() {
 }
 
 func ServerCmd(item *models.AppItem) {
-	fmt.Println("ServerCmd", item)
+	fmt.Println("ServerCmd Item", item)
+
+	server, _ := models.ServerGetById(item.ServerId)
+
+	if server.Type == 0 {
+		session, err := ConnectByUser(server.User, server.Pwd, server.Ip, server.Port)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer session.Close()
+
+		session.Stdout = os.Stdout
+		session.Stderr = os.Stderr
+
+		session.Run("ls")
+	}
+	fmt.Println("ServerCmd Server", server)
 }
 
 func NewCommandJob(cron *models.AppCron) *Job {
