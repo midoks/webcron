@@ -34,7 +34,10 @@
                 <thead>
                 <tr>
                     <th class="col-sm-1">序号</th>
+                    <th class="col-sm-1">项目ID</th>
                     <th class="col-sm-1">任务名称</th>
+                    <th class="col-sm-1">执行次数</th>
+                    <th class="col-sm-2">上次执行时间</th>
                     <th class="col-sm-2">更新时间</th>
                     <th class="col-sm-2">创建时间</th>
                     <th style="width: 80px;">状态</th>
@@ -51,7 +54,10 @@
                     {{range  $k, $v := .list}}
                     <tr>
                         <td>{{$v.Id}}</td>
+                        <td>{{$v.ItemId}}</td>
                         <td>{{$v.Name}}</td>
+                        <td>{{$v.ExecNum}}</td>
+                        <td>{{$v.PrevTime}}</td>
                         <td>{{$v.UpdateTime}}</td>
                         <td>{{$v.CreateTime}}</td>
                         <td>

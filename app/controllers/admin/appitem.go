@@ -112,6 +112,8 @@ func (this *AppItemController) Add() {
 
 		data.Name = vars["name"]
 		data.Desc = vars["desc"]
+		data.ServerId = vars["server_id"]
+		data.Type, _ = strconv.Atoi(vars["type"])
 
 		if id > 0 {
 

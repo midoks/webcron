@@ -6,6 +6,12 @@ import (
 	"time"
 )
 
+const (
+	CRON_SUCCESS = 0  // 任务执行成功
+	CRON_ERROR   = -1 // 任务执行出错
+	CRON_TIMEOUT = -2 // 任务执行超时
+)
+
 type AppCron struct {
 	Id         int
 	Name       string
@@ -15,7 +21,7 @@ type AppCron struct {
 	Cmd        string
 	Concurrent int
 	ExecNum    int
-	PrevTime   int
+	PrevTime   int64
 	Notify     int
 	Timeout    int
 	Status     int

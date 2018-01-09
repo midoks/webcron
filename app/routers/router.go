@@ -23,6 +23,7 @@ func init() {
 	beego.AutoRouter(&controllers.AppItemController{})
 	beego.AutoRouter(&controllers.AppServerController{})
 	beego.AutoRouter(&controllers.AppCronController{})
+	beego.AutoRouter(&controllers.AppCronLogController{})
 	beego.AutoRouter(&controllers.AppDebugController{})
 
 }

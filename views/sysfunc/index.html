@@ -112,7 +112,7 @@
                                     <span title="点击取消菜单显示" class="badge badge-warning">是</span>
                                 </a>
                                 {{else}}
-                                <a class="blue" href="javascript:del('/{{$.curController}}/setmenu?id={{.Id}}')">
+                                <a class="blue" href="javascript:req('/{{$.curController}}/setmenu?id={{.Id}}')">
                                     <span class="badge" title="点击设置菜单显示">否</span>
                                 </a>
                                 {{end}}

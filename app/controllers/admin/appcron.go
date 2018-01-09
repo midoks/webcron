@@ -43,7 +43,10 @@ func (this *AppCronController) Index() {
 		row := make(map[string]interface{})
 
 		row["Id"] = v.Id
+		row["ItemId"] = v.ItemId
 		row["Name"] = v.Name
+		row["ExecNum"] = v.ExecNum
+		row["PrevTime"] = beego.Date(time.Unix(v.PrevTime, 0), "Y-m-d H:i:s")
 
 		row["Status"] = v.Status
 		row["UpdateTime"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
