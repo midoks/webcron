@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: 2018-01-08 20:29:23
+-- Generation Time: 2018-01-10 18:06:49
 -- 服务器版本： 5.6.24
 -- PHP Version: 5.5.29
 
@@ -65,8 +65,26 @@ CREATE TABLE IF NOT EXISTS `app_cron` (
 --
 
 INSERT INTO `app_cron` (`id`, `name`, `desc`, `item_id`, `cron_spec`, `cmd`, `concurrent`, `exec_num`, `prev_time`, `notify`, `timeout`, `status`, `update_time`, `create_time`) VALUES
-(1, 'ccc', 'cccc', 0, '* * * * * *', '1', 0, 0, 0, 0, 10, 0, 1515379744, 0),
-(2, '测试任务', '测试任务', 2, '* * * * *', 'php -v', 0, 0, 0, 0, 10, -1, 1515409290, 1515378291);
+(1, 'ccc', 'cccc', 2, '*/10 * * * * ?', 'echo 12', 0, 1626, 1515578680, 0, 10, 1, 1515486354, 0),
+(2, '测试任务', '测试任务', 4, '*/3 * * * * ?', 'ls', 0, 5359, 1515578679, 0, 10, 1, 1515574611, 1515378291);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `app_cron_log`
+--
+
+DROP TABLE IF EXISTS `app_cron_log`;
+CREATE TABLE IF NOT EXISTS `app_cron_log` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `cron_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '任务ID',
+  `output` mediumtext NOT NULL COMMENT '任务输出',
+  `error` text NOT NULL COMMENT '错误信息',
+  `status` tinyint(4) NOT NULL COMMENT '状态',
+  `process_time` int(11) NOT NULL DEFAULT '0' COMMENT '消耗时间/毫秒',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -95,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `app_item` (
   `name` varchar(50) NOT NULL DEFAULT '0',
   `desc` varchar(100) NOT NULL DEFAULT '0',
   `type` tinyint(4) NOT NULL DEFAULT '0',
-  `server_id` text NOT NULL,
+  `server_id` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `update_time` int(11) NOT NULL DEFAULT '0',
   `create_time` int(11) NOT NULL DEFAULT '0',
@@ -107,9 +125,8 @@ CREATE TABLE IF NOT EXISTS `app_item` (
 --
 
 INSERT INTO `app_item` (`id`, `name`, `desc`, `type`, `server_id`, `status`, `update_time`, `create_time`) VALUES
-(2, '11', '11', 0, '', 1, 1515401315, 1515035827),
-(3, 'asdf', 'dd', 0, '', 1, 1515391007, 1515035843),
-(4, 'asd', 'dd', 0, '', 1, 1515063919, 1515035914);
+(2, 'test', '测试', 1, 0, 1, 1515474304, 1515035827),
+(4, '测试', '192.168.57.91', 0, 1, 1, 1515495066, 1515035914);
 
 -- --------------------------------------------------------
 
@@ -163,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `sys_func` (
   `create_time` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `pid` (`pid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='权限列表' AUTO_INCREMENT=37 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='权限列表' AUTO_INCREMENT=38 ;
 
 --
 -- 转存表中的数据 `sys_func`
@@ -195,17 +212,18 @@ INSERT INTO `sys_func` (`id`, `name`, `pid`, `controller`, `action`, `type`, `is
 (23, '添加服务器', 21, 'appserver', 'add', 0, 1, '', '', 0, 1, 1515040299, 1515040299),
 (24, '任务管理', 0, 'appcron', '', 0, 1, 'glyphicon glyphicon-refresh', '计划任务管理', 3, 1, 1515041719, 1515041701),
 (25, '任务列表', 24, 'appcron', 'index', 0, 1, '', '', 0, 1, 1515041741, 1515041741),
-(26, '添加任务', 24, 'appcron', 'add', 0, 1, '', '', 0, 1, 1515041766, 1515041766),
+(26, '添加任务', 24, 'appcron', 'add', 0, -1, '', '', 0, 1, 1515041766, 1515041766),
 (27, '调试日志管理', 0, 'appdebug', '', 0, 1, 'fa fa-bell', '异常日志管理', 4, 1, 1515042025, 1515041927),
 (28, '列表', 27, 'appdebug', 'index', 0, 1, '', '', 0, 1, 1515041961, 1515041961),
 (29, '项目搜索', 18, 'appitem', 'searchAjax', 0, -1, '', '', 0, 1, 1515382967, 1515382967),
 (30, '服务器锁定功能', 21, 'appserver', 'lock', 0, -1, '', '', 0, 1, 1515400454, 1515400454),
 (31, '服务器删除功能', 21, 'appserver', 'del', 0, -1, '', '', 0, 1, 1515400476, 1515400476),
-(32, '项目锁定', 18, 'appitem', 'lock', 0, -1, '', '', 0, 0, 1515400747, 1515400747),
-(33, '项目删除', 18, 'appitem', 'del', 0, -1, '', '', 0, 0, 1515400760, 1515400760),
+(32, '项目锁定', 18, 'appitem', 'lock', 0, -1, '', '', 0, 1, 1515400747, 1515400747),
+(33, '项目删除', 18, 'appitem', 'del', 0, -1, '', '', 0, 1, 1515400760, 1515400760),
 (34, '任务锁定', 24, 'appcron', 'lock', 0, -1, '', '', 0, 1, 1515403941, 1515403941),
 (35, '任务删除', 24, 'appcron', 'del', 0, -1, '', '', 0, 1, 1515403953, 1515403953),
-(36, '服务器搜索', 21, 'appserver', 'searchAjax', 0, -1, '', '', 0, 1, 1515405335, 1515405335);
+(36, '服务器搜索', 21, 'appserver', 'searchAjax', 0, -1, '', '', 0, 1, 1515405335, 1515405335),
+(37, '执行日志', 24, 'appcronlog', 'index', 0, 1, '', '', 0, 1, 1515491096, 1515491096);
 
 -- --------------------------------------------------------
 
@@ -221,11 +239,9 @@ CREATE TABLE IF NOT EXISTS `sys_logs` (
   `msg` text NOT NULL,
   `add_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=54 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
---
--- 转存表中的数据 `sys_logs`
---
+-- --------------------------------------------------------
 
 --
 -- 表的结构 `sys_role`
@@ -248,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `sys_role` (
 --
 
 INSERT INTO `sys_role` (`id`, `name`, `desc`, `list`, `status`, `update_time`, `create_time`) VALUES
-(1, '管理员', '系统总管理员', '2,6,7,8,9,16,3,4,5,10,15,11,12,13,14,17,22,23,30,31,36,19,20,29,32,33,25,26,34,35,28', 1, 1515405355, 1489429439),
+(1, '管理员', '系统总管理员', '2,6,7,8,9,16,3,4,5,10,15,11,12,13,14,17,22,23,30,31,36,19,20,29,32,33,25,26,34,35,37,28', 1, 1515491473, 1489429439),
 (2, '编辑', '普通编辑人员', '2,14,15,17,18,23,32', 1, 1489429439, 1489429439);
 
 -- --------------------------------------------------------

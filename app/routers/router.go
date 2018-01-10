@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/midoks/webcron/app/controllers/admin"
+	"github.com/midoks/webcron/app/controllers"
 	"github.com/midoks/webcron/app/models"
 )
 
@@ -19,11 +19,14 @@ func init() {
 	beego.AutoRouter(&controllers.SysRoleController{})
 	beego.AutoRouter(&controllers.SysLogController{})
 
-	//功能开发
+	//后台功能开发
 	beego.AutoRouter(&controllers.AppItemController{})
 	beego.AutoRouter(&controllers.AppServerController{})
 	beego.AutoRouter(&controllers.AppCronController{})
 	beego.AutoRouter(&controllers.AppCronLogController{})
 	beego.AutoRouter(&controllers.AppDebugController{})
+
+	//前台接口
+	beego.NewNamespace("/v1", beego.NSAutoRouter(&controllers.ItemController{}))
 
 }
