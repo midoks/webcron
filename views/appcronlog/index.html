@@ -47,7 +47,7 @@
                     <tr>
                         <td>{{$v.Id}}</td>
                         <td>{{$v.CronId}}</td>
-                        <td>{{if eq "" $v.Output}}无{{else}}{{$v.Output}}{{end}}</td>
+                        <td>{{if eq "" $v.Output}}无{{else}}<pre>{{$v.Output}}</pre>{{end}}</td>
                         <td>{{if eq "" $v.Error}}无{{else}}{{$v.Error}}{{end}}</td>
                         <td>{{$v.CreateTime}}</td>
                         <td>

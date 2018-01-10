@@ -3,15 +3,17 @@ package task
 import (
 	"bytes"
 	"fmt"
+	"github.com/astaxie/beego"
 	"github.com/axgle/mahonia"
 	"github.com/midoks/webcron/app/models"
 	"golang.org/x/crypto/ssh"
-	// "io/ioutil"
+	"io/ioutil"
 	"log"
 	"net"
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -80,28 +82,70 @@ func ConnectByUser(user, password, host string, port int) (*ssh.Session, error) 
 	return session, nil
 }
 
-func ConnectByRsa() {
-
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
 
-func ServerCmd(item *models.AppItem) {
-	fmt.Println("ServerCmd Item", item)
+func getCurrentPath() string {
+	s, err := exec.LookPath(os.Args[0])
+	checkErr(err)
+	i := strings.LastIndex(s, "\\")
+	path := string(s[0 : i+1])
+	return path
+}
 
-	server, _ := models.ServerGetById(item.ServerId)
+func ConnectByRsa(user string, host string, port int) (*ssh.Session, error) {
 
-	if server.Type == 0 {
-		session, err := ConnectByUser(server.User, server.Pwd, server.Ip, server.Port)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer session.Close()
+	var (
+		auth         []ssh.AuthMethod
+		addr         string
+		clientConfig *ssh.ClientConfig
+		client       *ssh.Client
+		session      *ssh.Session
+		err          error
+	)
 
-		session.Stdout = os.Stdout
-		session.Stderr = os.Stderr
-
-		session.Run("ls")
+	rsaContent, rsaErr := ioutil.ReadFile(fmt.Sprintf("conf/%s", beego.AppConfig.String("local.id_rsa")))
+	if rsaErr != nil {
+		beego.Warn(beego.AppConfig.String("local.id_rsa"), rsaErr)
+		return session, nil
 	}
-	fmt.Println("ServerCmd Server", server)
+
+	rsaValue := []byte(rsaContent)
+	pKeys, pErr := ssh.ParseRawPrivateKey(rsaValue)
+	if pErr != nil {
+		beego.Warn(fmt.Sprintf("Unable to parse test key %s: %v", pKeys, pErr))
+	}
+
+	signer, serr := ssh.NewSignerFromKey(pKeys)
+	if serr != nil {
+		beego.Warn(fmt.Sprintf("NewSignerFromKey:", serr))
+	}
+
+	auth = make([]ssh.AuthMethod, 0)
+	auth = append(auth, ssh.PublicKeys(signer))
+
+	clientConfig = &ssh.ClientConfig{
+		User:    user,
+		Auth:    auth,
+		Timeout: 30 * time.Second,
+		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+			return nil
+		},
+	}
+
+	addr = fmt.Sprintf("%s:%d", host, port)
+	if client, err = ssh.Dial("tcp", addr, clientConfig); err != nil {
+		return nil, err
+	}
+
+	if session, err = client.NewSession(); err != nil {
+		return nil, err
+	}
+
+	return session, nil
 }
 
 func NewCommandJob(cron *models.AppCron) *Job {
@@ -115,28 +159,58 @@ func NewCommandJob(cron *models.AppCron) *Job {
 
 		item, _ := models.ItemGetById(cron.ItemId)
 
-		var cmd *exec.Cmd
+		var err error
+		isTimeout := false
 
 		if item.Type == 0 {
-			ServerCmd(item)
+			server, _ := models.ServerGetById(item.ServerId)
+
+			var (
+				session *ssh.Session
+				err     error
+			)
+
+			if server.Type == 0 {
+				session, err = ConnectByUser(server.User, server.Pwd, server.Ip, server.Port)
+				defer session.Close()
+				if err != nil {
+					log.Fatal(err)
+				}
+				session.Stdout = bufOut
+				session.Stderr = bufErr
+				session.Run(cron.Cmd)
+			} else {
+				session, err = ConnectByRsa(server.User, server.Ip, server.Port)
+				defer session.Close()
+				if err != nil {
+					fmt.Println(err)
+				}
+				session.Stdout = bufOut
+				session.Stderr = bufErr
+				session.Run(cron.Cmd)
+			}
+			isTimeout = false
+			if err != nil {
+				beego.Warn("ServerCmd:", err)
+			}
+
 		} else {
+			var cmd *exec.Cmd
+			if IsWin() {
+				cmd = exec.Command("cmd", "/c", cron.Cmd)
+			} else {
+				cmd = exec.Command("/bin/bash", "-c", cron.Cmd)
+			}
 
+			cmd.Stdout = bufOut
+			cmd.Stderr = bufErr
+			cmd.Start()
+
+			err, isTimeout := runCmdWithTimeout(cmd, timeout)
+			if err != nil {
+				beego.Warn("runCmdWithTimeout:", err, isTimeout)
+			}
 		}
-
-		fmt.Println(cron.ItemId)
-
-		if IsWin() {
-			cmd = exec.Command("cmd", "/c", cron.Cmd)
-		} else {
-			cmd = exec.Command("/bin/bash", "-c", cron.Cmd)
-		}
-
-		cmd.Stdout = bufOut
-		cmd.Stderr = bufErr
-		cmd.Start()
-		err, isTimeout := runCmdWithTimeout(cmd, timeout)
-
-		fmt.Println(bufOut)
 
 		return bufOut.String(), bufErr.String(), err, isTimeout
 	}
@@ -144,9 +218,6 @@ func NewCommandJob(cron *models.AppCron) *Job {
 }
 
 func (j Job) Run() {
-
-	// fmt.Println(j.task)
-	// return
 
 	timeout := time.Duration(time.Hour * 24)
 	if j.task.Timeout > 0 {
