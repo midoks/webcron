@@ -27,6 +27,6 @@ func init() {
 	beego.AutoRouter(&controllers.AppDebugController{})
 
 	//前台接口
-	beego.NewNamespace("/v1", beego.NSAutoRouter(&controllers.ItemController{}))
-
+	ns := beego.NewNamespace("/v1", beego.NSAutoRouter(&controllers.ItemController{}))
+	beego.AddNamespace(ns)
 }

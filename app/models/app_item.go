@@ -11,6 +11,7 @@ type AppItem struct {
 	Name       string
 	Desc       string
 	Type       int
+	Sign       string
 	ServerId   int
 	Status     int
 	UpdateTime int64
