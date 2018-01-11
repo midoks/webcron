@@ -1,6 +1,3 @@
-<script src="/static/js/md5.js"></script>
-
-
 <div class="row">
     <div class="col-xs-12">
         <!-- PAGE CONTENT BEGINS -->
@@ -9,16 +6,9 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1">项目名: </label>
                 <div class="col-sm-9">
+                    
                     <input name="vars[name]" class="col-xs-8 col-sm-2" type="text" value="{{.data.Name}}" required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">项目标示: </label>
-                <div class="col-sm-9">
-                    <input id="item_sign" name="vars[sign]" class="col-xs-8 col-sm-3" type="text" value="{{.data.Sign}}" readonly="true">
-                    &nbsp;
-                    <div id="item_sign_make" class="btn btn-sm btn-primary">重新生成</div>
+                    
                 </div>
             </div>
 
@@ -262,27 +252,7 @@ function add_pro_func(obj){
 }
 //服务器搜索 end
 
-
-
 jQuery(function($) {
-//start
 
-//初始化sign
-var sign = $('#item_sign').val();
-if (sign == ""){
-    var t = new Date().getTime();
-    var md5_v = hex_md5("" + t);
-    $('#item_sign').val(md5_v);
-}
-
-//重新生成Sign
-$('#item_sign_make').click(function(){
-    var t = new Date().getTime();
-    var md5_v = hex_md5("" + t);
-    $('#item_sign').val(md5_v);
-});
-
-
-//end
 })
 </script>
