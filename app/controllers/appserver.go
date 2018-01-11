@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/midoks/webcron/app/libs"
 	"github.com/midoks/webcron/app/models"
+	"io/ioutil"
 	"strconv"
 	"strings"
 	"time"
@@ -109,6 +110,18 @@ func (this *AppServerController) Add() {
 	data := new(models.AppServer)
 	id, err := this.GetInt("id")
 
+	rsaKey := ""
+	fmt.Println(beego.AppConfig.String("local.id_rsa"))
+	if beego.AppConfig.String("local.id_rsa") != "" {
+		fmt.Println("local.id_rsa ok")
+		rsaContent, rsaErr := ioutil.ReadFile(fmt.Sprintf("conf/%s", beego.AppConfig.String("local.id_rsa")))
+		if rsaErr == nil {
+			rsaKey = string(rsaContent)
+			fmt.Println(rsaKey)
+		}
+	}
+	this.Data["rsaKey"] = rsaKey
+
 	if err == nil {
 		data, _ = models.ServerGetById(id)
 	}
@@ -125,7 +138,6 @@ func (this *AppServerController) Add() {
 
 		data.User = vars["user"]
 		data.Pwd = vars["pwd"]
-		data.PubKey = vars["pub_key"]
 
 		if id > 0 {
 

@@ -14,7 +14,6 @@ type AppServer struct {
 	Type       int
 	User       string
 	Pwd        string
-	PubKey     string
 	Status     int
 	UpdateTime int64
 	CreateTime int64

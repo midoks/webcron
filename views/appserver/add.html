@@ -32,12 +32,12 @@
                 <div class="col-sm-9">
 
                     <label class="inline">
-                        <input name="vars[type]" class="ace" type="radio" value="0" {{if eq 0 .data.Type}}checked{{end}}>
+                        <input c name="vars[type]" class="ace type_choose_class" type="radio" value="0" {{if eq 0 .data.Type}}checked{{end}}>
                         <span class="lbl middle">用户和密码</span>
                     </label>
                     &nbsp; &nbsp; &nbsp;
                     <label class="inline">
-                        <input name="vars[type]" class="ace" type="radio"  value="1" {{if eq 1 .data.Type}}checked{{end}}>
+                        <input name="vars[type]" class="ace type_choose_class" type="radio"  value="1" {{if eq 1 .data.Type}}checked{{end}}>
                         <span class="lbl middle">公钥登录</span>
                     </label>
 
@@ -51,26 +51,20 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div id="group_pwd" class="form-group">
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1">密码: </label>
                 <div class="col-sm-9">
                     <input name="vars[pwd]" class="col-xs-6 col-sm-3" type="text" required value="{{.data.Pwd}}"> 
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 公钥: </label>
+            <div id="group_rsa_key" class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 本机秘钥: </label>
 
                 <div class="col-sm-9">
-                    <textarea class="col-sm-5" name="vars[pub_key]">{{.data.PubKey}}</textarea>
+                    <div class="col-xs-6 col-sm-6"><pre>{{.rsaKey}}</pre></div>
                 </div>
             </div>
-
-            <div class="space-4"></div>
-
-
-
-
 
             <div class="space-4"></div>
             
@@ -93,6 +87,22 @@
 </div>
 <script>
 jQuery(function($) {
+//start
 
-})
+load_choose();
+function load_choose(){
+   var _tv = $('.type_choose_class:checked').val();
+    if(_tv == 1){
+        $('#group_pwd').addClass('hidden');
+        $('#group_rsa_key').removeClass('hidden');
+    } else {
+        $('#group_pwd').removeClass('hidden');
+        $('#group_rsa_key').addClass('hidden');
+    }  
+}
+$('.type_choose_class').click(function(){
+    load_choose();
+});
+//end
+});
 </script>

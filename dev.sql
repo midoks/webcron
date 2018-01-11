@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: 2018-01-10 18:06:49
+-- Generation Time: 2018-01-11 19:44:12
 -- 服务器版本： 5.6.24
 -- PHP Version: 5.5.29
 
@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS `app_cron` (
 --
 
 INSERT INTO `app_cron` (`id`, `name`, `desc`, `item_id`, `cron_spec`, `cmd`, `concurrent`, `exec_num`, `prev_time`, `notify`, `timeout`, `status`, `update_time`, `create_time`) VALUES
-(1, 'ccc', 'cccc', 2, '*/10 * * * * ?', 'echo 12', 0, 1626, 1515578680, 0, 10, 1, 1515486354, 0),
-(2, '测试任务', '测试任务', 4, '*/3 * * * * ?', 'ls', 0, 5359, 1515578679, 0, 10, 1, 1515574611, 1515378291);
+(1, 'ccc', 'cccc', 2, '*/2 * * * * ?', 'echo 12', 0, 3604, 1515670988, 0, 10, 1, 1515670198, 0),
+(2, '测试任务', '测试任务', 4, '*/3 * * * * ?', 'ls', 0, 7282, 1515670989, 0, 10, 1, 1515670184, 1515378291);
 
 -- --------------------------------------------------------
 
@@ -113,6 +113,7 @@ CREATE TABLE IF NOT EXISTS `app_item` (
   `name` varchar(50) NOT NULL DEFAULT '0',
   `desc` varchar(100) NOT NULL DEFAULT '0',
   `type` tinyint(4) NOT NULL DEFAULT '0',
+  `sign` char(32) DEFAULT NULL,
   `server_id` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `update_time` int(11) NOT NULL DEFAULT '0',
@@ -124,9 +125,9 @@ CREATE TABLE IF NOT EXISTS `app_item` (
 -- 转存表中的数据 `app_item`
 --
 
-INSERT INTO `app_item` (`id`, `name`, `desc`, `type`, `server_id`, `status`, `update_time`, `create_time`) VALUES
-(2, 'test', '测试', 1, 0, 1, 1515474304, 1515035827),
-(4, '测试', '192.168.57.91', 0, 1, 1, 1515495066, 1515035914);
+INSERT INTO `app_item` (`id`, `name`, `desc`, `type`, `sign`, `server_id`, `status`, `update_time`, `create_time`) VALUES
+(2, 'test', '测试', 1, '2', 0, 1, 1515474304, 1515035827),
+(4, '测试', '192.168.57.91', 0, '1ad48a0957f19d5f1f110448d3fb7a4b', 1, 1, 1515640581, 1515035914);
 
 -- --------------------------------------------------------
 
@@ -143,7 +144,6 @@ CREATE TABLE IF NOT EXISTS `app_server` (
   `desc` varchar(255) NOT NULL,
   `user` varchar(50) NOT NULL DEFAULT '0',
   `pwd` varchar(50) NOT NULL DEFAULT '0',
-  `pub_key` text NOT NULL,
   `status` tinyint(4) NOT NULL,
   `update_time` int(11) NOT NULL DEFAULT '0',
   `create_time` int(11) NOT NULL DEFAULT '0',
@@ -154,8 +154,8 @@ CREATE TABLE IF NOT EXISTS `app_server` (
 -- 转存表中的数据 `app_server`
 --
 
-INSERT INTO `app_server` (`id`, `ip`, `port`, `type`, `desc`, `user`, `pwd`, `pub_key`, `status`, `update_time`, `create_time`) VALUES
-(1, '192.168.57.91', 22, 0, '测试服务器', 'chenjiangshan', 'cjscjs123', '123123', 1, 1515408924, 0);
+INSERT INTO `app_server` (`id`, `ip`, `port`, `type`, `desc`, `user`, `pwd`, `status`, `update_time`, `create_time`) VALUES
+(1, '192.168.57.91', 22, 0, '测试服务器', 'chenjiangshan', 'cjscjs123', 1, 1515670951, 0);
 
 -- --------------------------------------------------------
 

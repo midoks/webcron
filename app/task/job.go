@@ -8,7 +8,6 @@ import (
 	"github.com/midoks/webcron/app/models"
 	"golang.org/x/crypto/ssh"
 	"io/ioutil"
-	"log"
 	"net"
 	"os"
 	"os/exec"
@@ -117,11 +116,13 @@ func ConnectByRsa(user string, host string, port int) (*ssh.Session, error) {
 	pKeys, pErr := ssh.ParseRawPrivateKey(rsaValue)
 	if pErr != nil {
 		beego.Warn(fmt.Sprintf("Unable to parse test key %s: %v", pKeys, pErr))
+		return nil, pErr
 	}
 
 	signer, serr := ssh.NewSignerFromKey(pKeys)
 	if serr != nil {
 		beego.Warn(fmt.Sprintf("NewSignerFromKey:", serr))
+		return nil, serr
 	}
 
 	auth = make([]ssh.AuthMethod, 0)
@@ -167,31 +168,35 @@ func NewCommandJob(cron *models.AppCron) *Job {
 
 			var (
 				session *ssh.Session
-				err     error
 			)
 
 			if server.Type == 0 {
 				session, err = ConnectByUser(server.User, server.Pwd, server.Ip, server.Port)
-				defer session.Close()
+
 				if err != nil {
-					log.Fatal(err)
+				} else {
+					defer session.Close()
+					session.Stdout = bufOut
+					session.Stderr = bufErr
+					session.Run(cron.Cmd)
 				}
-				session.Stdout = bufOut
-				session.Stderr = bufErr
-				session.Run(cron.Cmd)
+
 			} else {
 				session, err = ConnectByRsa(server.User, server.Ip, server.Port)
-				defer session.Close()
+
 				if err != nil {
-					fmt.Println(err)
+				} else {
+					defer session.Close()
+					session.Stdout = bufOut
+					session.Stderr = bufErr
+					session.Run(cron.Cmd)
 				}
-				session.Stdout = bufOut
-				session.Stderr = bufErr
-				session.Run(cron.Cmd)
+
 			}
 			isTimeout = false
 			if err != nil {
-				beego.Warn("ServerCmd:", err)
+				beego.Debug(err)
+				return bufOut.String(), bufErr.String(), err, isTimeout
 			}
 
 		} else {
