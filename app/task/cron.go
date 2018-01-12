@@ -20,7 +20,7 @@ func init() {
 	mainCron.Start()
 }
 
-func AddJob(spec string, job Job) bool {
+func AddJob(spec string, job *Job) bool {
 	lock.Lock()
 	defer lock.Unlock()
 

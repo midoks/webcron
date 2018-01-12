@@ -222,7 +222,25 @@ func NewCommandJob(cron *models.AppCron) *Job {
 	return job
 }
 
-func (j Job) Run() {
+func (j *Job) Status() int {
+	return j.status
+}
+
+func (j *Job) GetName() string {
+	return j.name
+}
+
+func (j *Job) GetId() int {
+	return j.id
+}
+
+func (j *Job) GetLogId() int64 {
+	return j.logId
+}
+
+func (j *Job) Run() {
+
+
 
 	timeout := time.Duration(time.Hour * 24)
 	if j.task.Timeout > 0 {

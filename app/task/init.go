@@ -5,24 +5,22 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/midoks/webcron/app/models"
 	"os/exec"
-	// "runtime"
 	"time"
 )
 
 func Init() {
-	fmt.Println("cron init")
-	// runtime.GOMAXPROCS(runtime.NumCPU())
+	beego.Debug("cron init")
 	list, _ := models.CronGetList(1, 1000000, "status", 1, "item_id__gt", 0)
 	for _, task := range list {
-		fmt.Println(task.CronSpec)
+		beego.Debug(task.CronSpec)
 		job, err := NewJobFromTask(task)
 		if err != nil {
 			beego.Error("InitJobs:", err.Error())
 			continue
 		}
-		AddJob(task.CronSpec, *job)
+		AddJob(task.CronSpec, job)
 	}
-	fmt.Println("cron end")
+	beego.Debug("cron end")
 }
 
 func runCmdWithTimeout(cmd *exec.Cmd, timeout time.Duration) (error, bool) {

@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/midoks/webcron/app/libs"
+	"github.com/midoks/webcron/app/task"
 	"github.com/midoks/webcron/app/models"
 	"strconv"
 	"strings"
@@ -123,9 +124,17 @@ func (this *AppCronController) Lock() {
 		if data.Status > 0 {
 			data.Status = -1
 			this.uLog("Cron锁定成功")
+
+			task.RemoveJob(id)
+			beego.Debug("删除任务成功!")
 		} else {
 			data.Status = 1
 			this.uLog("Cron解锁成功")
+
+			job, _ := task.NewJobFromTask(data)
+			task.AddJob(data.CronSpec, job)
+			beego.Debug("添加任务成功!")
+
 		}
 		err = data.Update()
 
