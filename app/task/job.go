@@ -77,6 +77,8 @@ func ConnectByUser(user, password, host string, port int) (*ssh.Session, error) 
 	if session, err = client.NewSession(); err != nil {
 		return nil, err
 	}
+	
+	defer session.Close()
 
 	return session, nil
 }
@@ -146,6 +148,8 @@ func ConnectByRsa(user string, host string, port int) (*ssh.Session, error) {
 		return nil, err
 	}
 
+	defer session.Close()
+
 	return session, nil
 }
 
@@ -175,7 +179,7 @@ func NewCommandJob(cron *models.AppCron) *Job {
 
 				if err != nil {
 				} else {
-					defer session.Close()
+					
 					session.Stdout = bufOut
 					session.Stderr = bufErr
 					session.Run(cron.Cmd)
@@ -186,7 +190,7 @@ func NewCommandJob(cron *models.AppCron) *Job {
 
 				if err != nil {
 				} else {
-					defer session.Close()
+					// defer session.Close()
 					session.Stdout = bufOut
 					session.Stderr = bufErr
 					session.Run(cron.Cmd)

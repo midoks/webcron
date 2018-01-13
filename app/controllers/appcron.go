@@ -132,9 +132,12 @@ func (this *AppCronController) Lock() {
 			this.uLog("Cron解锁成功")
 
 			job, _ := task.NewJobFromTask(data)
-			task.AddJob(data.CronSpec, job)
-			beego.Debug("添加任务成功!")
-
+			retBool := task.AddJob(data.CronSpec, job)
+			if retBool {
+				beego.Debug("添加任务成功!")
+			} else {
+				beego.Debug("添加任务失败!")
+			}
 		}
 		err = data.Update()
 

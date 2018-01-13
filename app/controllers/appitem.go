@@ -45,6 +45,7 @@ func (this *AppItemController) Index() {
 		row["Id"] = v.Id
 		row["Name"] = v.Name
 		row["Desc"] = v.Desc
+		row["Type"] = v.Type
 
 		row["Status"] = v.Status
 		row["UpdateTime"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
@@ -86,6 +87,7 @@ func (this *AppItemController) SearchAjax() {
 		row["Id"] = v.Id
 		row["Name"] = v.Name
 		row["Desc"] = v.Desc
+		row["Type"] = v.Type
 
 		row["Status"] = v.Status
 		row["UpdateTime"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
