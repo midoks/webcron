@@ -37,7 +37,6 @@ func NewJobFromTask(cron *models.AppCron) (*Job, error) {
 }
 
 func IsWin() bool {
-	// fmt.Println("sys:", runtime.GOOS)
 	if runtime.GOOS == "windows" {
 		return true
 	}
@@ -77,8 +76,8 @@ func ConnectByUser(user, password, host string, port int) (*ssh.Session, error) 
 	if session, err = client.NewSession(); err != nil {
 		return nil, err
 	}
-	
-	defer session.Close()
+
+	// defer session.Close()
 
 	return session, nil
 }
@@ -148,8 +147,6 @@ func ConnectByRsa(user string, host string, port int) (*ssh.Session, error) {
 		return nil, err
 	}
 
-	defer session.Close()
-
 	return session, nil
 }
 
@@ -179,23 +176,22 @@ func NewCommandJob(cron *models.AppCron) *Job {
 
 				if err != nil {
 				} else {
-					
+					defer session.Close()
 					session.Stdout = bufOut
 					session.Stderr = bufErr
 					session.Run(cron.Cmd)
 				}
-
+				beego.Debug(server, "eee:", bufOut)
 			} else {
 				session, err = ConnectByRsa(server.User, server.Ip, server.Port)
 
 				if err != nil {
 				} else {
-					// defer session.Close()
+					defer session.Close()
 					session.Stdout = bufOut
 					session.Stderr = bufErr
 					session.Run(cron.Cmd)
 				}
-
 			}
 			isTimeout = false
 			if err != nil {
@@ -243,8 +239,6 @@ func (j *Job) GetLogId() int64 {
 }
 
 func (j *Job) Run() {
-
-
 
 	timeout := time.Duration(time.Hour * 24)
 	if j.task.Timeout > 0 {
