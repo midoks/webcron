@@ -281,7 +281,12 @@ func (j *Job) Run() {
 
 	log := new(models.AppCronLog)
 	log.CronId = j.id
-	log.Output = ConvertToString(cmdOut, "gbk", "utf8")
+	if IsWin() {
+		log.Output = ConvertToString(cmdOut, "gbk", "utf8")
+	} else {
+		log.Output = cmdOut
+	}
+
 	log.Error = cmdErr
 	log.ProcessTime = int(ut)
 	log.CreateTime = t.Unix()
@@ -302,7 +307,7 @@ func (j *Job) Run() {
 	j.task.Update("PrevTime", "ExecNum")
 
 	// fmt.Println(cmdOut, cmdErr, err, isTimeout, j.task)
-	fmt.Println(j.task.Notify)
+	// fmt.Println(j.task.Notify)
 
 	// 发送邮件通知
 	if (j.task.Notify == 1 && err != nil) || j.task.Notify == 2 {
