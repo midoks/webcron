@@ -43,7 +43,7 @@ func IsWin() bool {
 	return false
 }
 
-func ConnectByUser(user, password, host string, port int) (*ssh.Session, error) {
+func ConnectByUser(user, password, host string, port int) (*ssh.Session, *ssh.Client, error) {
 	var (
 		auth         []ssh.AuthMethod
 		addr         string
@@ -69,17 +69,15 @@ func ConnectByUser(user, password, host string, port int) (*ssh.Session, error) 
 	addr = fmt.Sprintf("%s:%d", host, port)
 
 	if client, err = ssh.Dial("tcp", addr, clientConfig); err != nil {
-		return nil, err
+		return nil, client, err
 	}
 
 	// create session
 	if session, err = client.NewSession(); err != nil {
-		return nil, err
+		return nil, client, err
 	}
 
-	// defer session.Close()
-
-	return session, nil
+	return session, client, nil
 }
 
 func checkErr(err error) {
@@ -96,7 +94,7 @@ func getCurrentPath() string {
 	return path
 }
 
-func ConnectByRsa(user string, host string, port int) (*ssh.Session, error) {
+func ConnectByRsa(user string, host string, port int) (*ssh.Session, *ssh.Client, error) {
 
 	var (
 		auth         []ssh.AuthMethod
@@ -110,20 +108,20 @@ func ConnectByRsa(user string, host string, port int) (*ssh.Session, error) {
 	rsaContent, rsaErr := ioutil.ReadFile(fmt.Sprintf("conf/%s", beego.AppConfig.String("local.id_rsa")))
 	if rsaErr != nil {
 		beego.Warn(beego.AppConfig.String("local.id_rsa"), rsaErr)
-		return session, nil
+		return nil, nil, rsaErr
 	}
 
 	rsaValue := []byte(rsaContent)
 	pKeys, pErr := ssh.ParseRawPrivateKey(rsaValue)
 	if pErr != nil {
 		beego.Warn(fmt.Sprintf("Unable to parse test key %s: %v", pKeys, pErr))
-		return nil, pErr
+		return nil, nil, pErr
 	}
 
 	signer, serr := ssh.NewSignerFromKey(pKeys)
 	if serr != nil {
 		beego.Warn(fmt.Sprintf("NewSignerFromKey:", serr))
-		return nil, serr
+		return nil, nil, serr
 	}
 
 	auth = make([]ssh.AuthMethod, 0)
@@ -132,7 +130,7 @@ func ConnectByRsa(user string, host string, port int) (*ssh.Session, error) {
 	clientConfig = &ssh.ClientConfig{
 		User:    user,
 		Auth:    auth,
-		Timeout: 30 * time.Second,
+		Timeout: 1 * time.Second,
 		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 			return nil
 		},
@@ -140,14 +138,14 @@ func ConnectByRsa(user string, host string, port int) (*ssh.Session, error) {
 
 	addr = fmt.Sprintf("%s:%d", host, port)
 	if client, err = ssh.Dial("tcp", addr, clientConfig); err != nil {
-		return nil, err
+		return nil, client, err
 	}
 
 	if session, err = client.NewSession(); err != nil {
-		return nil, err
+		return nil, client, err
 	}
 
-	return session, nil
+	return session, client, nil
 }
 
 func NewCommandJob(cron *models.AppCron) *Job {
@@ -169,31 +167,28 @@ func NewCommandJob(cron *models.AppCron) *Job {
 
 			var (
 				session *ssh.Session
+				client  *ssh.Client
 			)
 
 			if server.Type == 0 {
-				session, err = ConnectByUser(server.User, server.Pwd, server.Ip, server.Port)
-
-				if err != nil {
-				} else {
-					defer session.Close()
-					session.Stdout = bufOut
-					session.Stderr = bufErr
-					session.Run(cron.Cmd)
-				}
-				beego.Debug(server, "eee:", bufOut)
+				session, client, err = ConnectByUser(server.User, server.Pwd, server.Ip, server.Port)
 			} else {
-				session, err = ConnectByRsa(server.User, server.Ip, server.Port)
-
-				if err != nil {
-				} else {
-					defer session.Close()
-					session.Stdout = bufOut
-					session.Stderr = bufErr
-					session.Run(cron.Cmd)
-				}
+				session, client, err = ConnectByRsa(server.User, server.Ip, server.Port)
 			}
-			isTimeout = false
+
+			if err == nil {
+				defer session.Close()
+				defer client.Close()
+
+				session.Stdout = bufOut
+				session.Stderr = bufErr
+				session.Start(cron.Cmd)
+
+				err, isTimeout = runShWithTimeout(session, timeout)
+			} else {
+				beego.Debug(server, "eee:", bufOut)
+			}
+
 			if err != nil {
 				beego.Debug(err)
 				return bufOut.String(), bufErr.String(), err, isTimeout
