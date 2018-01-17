@@ -10,6 +10,7 @@ type AppItem struct {
 	Id         int
 	Name       string
 	Desc       string
+	Mail       string
 	Type       int
 	Sign       string
 	ServerId   int

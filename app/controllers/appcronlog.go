@@ -47,6 +47,8 @@ func (this *AppCronLogController) Index() {
 		row["Output"] = v.Output
 		row["Error"] = v.Error
 
+		row["ProcessTime"] = v.ProcessTime
+
 		row["Status"] = v.Status
 		row["CreateTime"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
 

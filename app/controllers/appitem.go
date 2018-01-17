@@ -115,6 +115,7 @@ func (this *AppItemController) Add() {
 		data.Name = vars["name"]
 		data.Desc = vars["desc"]
 		data.Sign = vars["sign"]
+		data.Mail = vars["mail"]
 		data.ServerId, _ = strconv.Atoi(vars["server_id"])
 		data.Type, _ = strconv.Atoi(vars["type"])
 

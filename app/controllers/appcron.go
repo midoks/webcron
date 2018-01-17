@@ -5,8 +5,8 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/midoks/webcron/app/libs"
-	"github.com/midoks/webcron/app/task"
 	"github.com/midoks/webcron/app/models"
+	"github.com/midoks/webcron/app/task"
 	"strconv"
 	"strings"
 	"time"
@@ -87,6 +87,17 @@ func (this *AppCronController) Add() {
 
 		if id > 0 {
 
+			task.RemoveJob(id)
+			beego.Debug("删除任务成功!")
+
+			job, _ := task.NewJobFromTask(data)
+			retBool := task.AddJob(data.CronSpec, job)
+			if retBool {
+				beego.Debug("添加任务成功!")
+			} else {
+				beego.Debug("添加任务失败!")
+			}
+
 			data.UpdateTime = time.Now().Unix()
 			err := data.Update()
 			if err == nil {
@@ -154,6 +165,10 @@ func (this *AppCronController) Del() {
 	if err == nil {
 		num, err := models.CronDelById(id)
 		if err == nil {
+
+			task.RemoveJob(id)
+			beego.Debug("删除任务成功!")
+
 			msg := fmt.Sprintf("删除Cron:%s,成功", num)
 			this.uLog(msg)
 			this.retOk(msg)

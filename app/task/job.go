@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/axgle/mahonia"
+	"github.com/midoks/webcron/app/mail"
 	"github.com/midoks/webcron/app/models"
 	"golang.org/x/crypto/ssh"
+	"html/template"
 	"io/ioutil"
 	"net"
 	"os"
@@ -15,6 +17,32 @@ import (
 	"strings"
 	"time"
 )
+
+var mailTpl *template.Template
+
+func init() {
+	mailTpl, _ = template.New("mail_tpl").Parse(`
+	你好 {{.username}}，<br/>
+
+<p>以下是任务执行结果：</p>
+
+<p>
+任务ID：{{.task_id}}<br/>
+任务名称：{{.task_name}}<br/>       
+执行时间：{{.start_time}}<br />
+执行耗时：{{.process_time}}秒<br />
+执行状态：{{.status}}
+</p>
+<p>-------------以下是任务执行输出-------------</p>
+<p>{{.output}}</p>
+<p>
+--------------------------------------------<br />
+本邮件由系统自动发出，请勿回复<br />
+如果要取消邮件通知，请登录到系统进行设置<br />
+</p>
+`)
+
+}
 
 type Job struct {
 	id         int                                               // 任务ID
@@ -272,6 +300,48 @@ func (j *Job) Run() {
 	j.task.PrevTime = t.Unix()
 	j.task.ExecNum++
 	j.task.Update("PrevTime", "ExecNum")
+
+	// fmt.Println(cmdOut, cmdErr, err, isTimeout, j.task)
+	fmt.Println(j.task.Notify)
+
+	// 发送邮件通知
+	if (j.task.Notify == 1 && err != nil) || j.task.Notify == 2 {
+		item, uerr := models.ItemGetById(j.task.ItemId)
+		if uerr != nil {
+			return
+		}
+
+		var title string
+
+		data := make(map[string]interface{})
+		data["task_id"] = j.task.Id
+		data["username"] = "通知"
+		data["task_name"] = j.task.Name
+		data["start_time"] = beego.Date(t, "Y-m-d H:i:s")
+		data["process_time"] = float64(ut) / 1000
+		data["output"] = cmdOut
+
+		if isTimeout {
+			title = fmt.Sprintf("任务执行结果通知 #%d: %s", j.task.Id, "超时")
+			data["status"] = fmt.Sprintf("超时（%d秒）", int(timeout/time.Second))
+		} else if err != nil {
+			title = fmt.Sprintf("任务执行结果通知 #%d: %s", j.task.Id, "失败")
+			data["status"] = "失败（" + err.Error() + "）"
+		} else {
+			title = fmt.Sprintf("任务执行结果通知 #%d: %s", j.task.Id, "成功")
+			data["status"] = "成功"
+		}
+
+		content := new(bytes.Buffer)
+		mailTpl.Execute(content, data)
+		ccList := make([]string, 0)
+		if item.Mail != "" {
+			ccList = strings.Split(item.Mail, "\n")
+		}
+		if !mail.SendMail(ccList[0], "通知", title, content.String(), ccList) {
+			beego.Error("发送邮件超时：", ccList)
+		}
+	}
 }
 
 func ConvertToString(src string, srcCode string, tagCode string) string {

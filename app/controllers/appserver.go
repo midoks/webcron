@@ -111,9 +111,9 @@ func (this *AppServerController) Add() {
 	id, err := this.GetInt("id")
 
 	rsaKey := ""
-	fmt.Println(beego.AppConfig.String("local.id_rsa"))
+	// fmt.Println(beego.AppConfig.String("local.id_rsa"))
 	if beego.AppConfig.String("local.id_rsa") != "" {
-		fmt.Println("local.id_rsa ok")
+		// fmt.Println("local.id_rsa ok")
 		rsaContent, rsaErr := ioutil.ReadFile(fmt.Sprintf("conf/%s", beego.AppConfig.String("local.id_rsa")))
 		if rsaErr == nil {
 			rsaKey = string(rsaContent)
