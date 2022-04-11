@@ -2,13 +2,15 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/astaxie/beego"
-	// "github.com/midoks/webcron/app/lib"
-	"github.com/midoks/webcron/app/models"
-	"github.com/astaxie/beego/orm"
+	"strconv"
 	"strings"
 	"time"
-	"strconv"
+
+	"github.com/astaxie/beego"
+	// "github.com/midoks/webcron/app/lib"
+	"github.com/astaxie/beego/orm"
+
+	"github.com/midoks/webcron/app/models"
 )
 
 type SysFuncController struct {
@@ -35,14 +37,13 @@ func (this *SysFuncController) Index() {
 	this.display()
 }
 
-
 func (this *SysFuncController) Add() {
 
 	row := new(models.SysFunc)
 	id, err := this.GetInt("id")
 
 	if err == nil {
-		row, _ = models.FuncGetById(id)	
+		row, _ = models.FuncGetById(id)
 	}
 	this.Data["row"] = row
 
@@ -53,7 +54,7 @@ func (this *SysFuncController) Add() {
 
 		row.Name = vars["name"]
 		row.Pid, _ = strconv.Atoi(vars["pid"])
-		row.Controller= vars["controller"]
+		row.Controller = vars["controller"]
 		row.Action = vars["action"]
 		row.Type, _ = strconv.Atoi(vars["type"])
 		row.Icon = vars["icon"]
@@ -65,10 +66,10 @@ func (this *SysFuncController) Add() {
 			row.IsMenu = -1
 		}
 
-		row.Sort,_ = strconv.Atoi(vars["sort"])
+		row.Sort, _ = strconv.Atoi(vars["sort"])
 
 		if id > 0 {
-	
+
 			row.UpdateTime = time.Now().Unix()
 			err := row.Update()
 			if err == nil {
@@ -91,12 +92,11 @@ func (this *SysFuncController) Add() {
 		}
 	}
 
-	listRow ,_:= models.FuncGetListByPid(0)
+	listRow, _ := models.FuncGetListByPid(0)
 	this.Data["listRow"] = listRow
 
 	this.display()
 }
-
 
 func (this *SysFuncController) Lock() {
 
@@ -112,8 +112,8 @@ func (this *SysFuncController) Lock() {
 			this.uLog("功能解锁成功")
 		}
 		err = data.Update()
-		
-		if err == nil{
+
+		if err == nil {
 			this.retOk("功能修改成功")
 		}
 	}
@@ -134,8 +134,8 @@ func (this *SysFuncController) Setmenu() {
 			this.uLog("显示菜单成功")
 		}
 		err = data.Update()
-		
-		if err == nil{
+
+		if err == nil {
 			this.retOk("是否显示菜单修改成功")
 		}
 	}
@@ -148,7 +148,7 @@ func (this *SysFuncController) Del() {
 	if err == nil {
 		num, err := models.FuncDelById(id)
 		if err == nil {
-			msg := fmt.Sprintf("删除功能ID:%d成功",num)
+			msg := fmt.Sprintf("删除功能ID:%d成功", num)
 			this.uLog(msg)
 			this.retOk(msg)
 		}
@@ -160,7 +160,7 @@ func (this *SysFuncController) Sort() {
 
 	id, err := this.GetInt("id")
 	stype := this.GetString("type")
-	
+
 	if err == nil {
 		data, _ := models.FuncGetById(id)
 		if stype == "up" {
@@ -171,11 +171,10 @@ func (this *SysFuncController) Sort() {
 
 		dataErr := data.Update()
 		if dataErr == nil {
-			msg := fmt.Sprintf("功能ID:%d,排序:%s,更新%d成功",data.Id, stype, data.Sort)
+			msg := fmt.Sprintf("功能ID:%d,排序:%s,更新%d成功", data.Id, stype, data.Sort)
 			this.uLog(msg)
 			this.retOk(msg)
 		}
 	}
 	this.retFail("非法参数")
 }
-
